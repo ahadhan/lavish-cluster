@@ -1,0 +1,215 @@
+@font-face {
+  font-family: 'Poppins';
+  font-weight: 400;
+  font-style: normal;
+  src: url('./fonts/Poppins-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Poppins';
+  font-weight: 700;
+  font-style: normal;
+  src: url('./fonts/Poppins-Bold.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Libre Baskerville';
+  font-weight: 400;
+  font-style: normal;
+  src: url('./fonts/LibreBaskerville-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Libre Baskerville';
+  font-weight: 700;
+  font-style: normal;
+  src: url('./fonts/LibreBaskerville-Bold.ttf') format('truetype');
+}
+
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  @apply font-poppins;
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+
+.container{
+  max-width: 93vw;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* styles/globals.css */
+
+/* Keyframes for rotating the entire circle */
+
+/* Gradient from top to bottom */
+.bg-gradient-top-to-bottom {
+  background: linear-gradient(to bottom, #000000, #0a0f1a);
+}
+
+/* Gradient from bottom to top */
+.bg-gradient-bottom-to-top {
+  background: linear-gradient(to top, #000000, #0a0f1a);
+}
+
+
+/* Parallax container with darkened background */
+/* Parallax effect for the background */
+/* Parallax effect for the background */
+.parallax-section {
+  position: relative;
+  overflow: hidden;
+  min-height: 100vh;
+}
+
+/* .parallax-background {
+  background-image: url('/assets/banner.jpg') !important;
+  background-position: center !important;
+  background-size: cover !important;
+  background-attachment: fixed !important;
+  background-repeat: no-repeat !important;
+  width: 100% !important;
+  height: 100% !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  z-index: -1 !important;
+} */
+
+.parallax-background {
+  background-color: red;
+  width: 50%;
+}
+
+
+/* Make sure the content is visible over the parallax background */
+.content {
+  position: relative;
+  z-index: 10; /* Keeps the content above the background */
+}
+
+/* General container styling */
+.container {
+  max-width: 93vw;
+}
+
+
+
+.font-bold {
+  font-weight: bold;
+}
+
+
+/* Utility for hiding scrollbars */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Styling for Carousel */
+.carousel {
+  display: flex;
+  align-items: center;
+  /* justify-content: space-between; */
+  
+}
+
+.carousel-image {
+  flex: 1;
+  text-align: center;
+}
+
+.carousel button {
+  font-size: 2rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.text-shadow-xl {
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
+}
+
+/* Marquee container */
+.marquee {
+  width: 100%;
+  overflow: hidden;
+  padding: 10px 0;
+  color: white;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Marquee content */
+.marquee-content {
+  display:flex  ;
+  white-space: nowrap;
+  animation: marquee 40s linear infinite; /* Move content continuously */
+}
+
+.social-link {
+  margin: 0 15px;
+  /* color: #ffffff; */
+  /* color: gray; */
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 1rem;  
+  align-items: center;
+  gap: 20px;
+  transition-duration: 300ms;
+}
+
+.social-link:hover {
+  color: #1DA1F2; 
+}
+
+.icon {
+  margin-left: 10px;
+  font-size: 1.5rem; /* Adjust icon size */
+}
+
+/* Keyframes for the scrolling effect */
+@keyframes marquee {
+  0% {
+    transform: translateX(100%); /* Start outside the right edge */
+  }
+  100% {
+    transform: translateX(-100%); /* Move completely to the left */
+  }
+}
