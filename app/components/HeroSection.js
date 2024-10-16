@@ -1,18 +1,18 @@
-
 'use client';
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { FaLocationArrow } from "react-icons/fa";
 import { motion } from 'framer-motion';
+import { Parallax } from 'react-parallax';
 import '../../app/globals.css';
 import Image from 'next/image';
 import p1 from '../assets/1.png'; // Product 1 image
 import p2 from '../assets/2.png'; // Product 2 image
 import p3 from '../assets/3.png'; // Product 3 image
-import { IoIosArrowForward } from "react-icons/io";
-import { IoIosArrowBack } from "react-icons/io";
-import bannerImg from '../assets/1.png';
+import bannerImg from '../assets/bgImage.jpg';
+import logoImg from '../assets/logo.png';
+import { IoIosArrowForward, IoIosArrowBack } from "react-icons/io";
 
 const HeroSection = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -34,114 +34,93 @@ const HeroSection = () => {
       handleNext(); // Move to the next slide automatically
     }, 5000); // 5 seconds interval
 
-    // Cleanup function to clear the interval when the component unmounts
     return () => clearInterval(interval);
-  }, []); // Empty dependency array ensures the interval runs once when the component mounts
+  }, []);
 
   return (
-    <section className="relative flex items-center justify-around text-white py-10 parallax-section">
+    <section className="relative text-white">
       {/* Parallax Background */}
-      <div
-        className="parallax-background"
-        style={{
-          backgroundImage: `url(${bannerImg.src})`,
-          backgroundPosition: "center",
-          backgroundSize: "cover",
-          backgroundAttachment: "fixed",
-          backgroundRepeat: "no-repeat",
-          width: "100%",
-          height: "100%",
-          position: "absolute",
-          top: "0",
-          left: "0",
-          zIndex: "-1"
-        }}
-      ></div>
-
-      <div className="content text-center px-14 w-[70%] mt-28">
-        {/* Main Heading */}
-        <motion.h1
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1 }}
-          className="font-poppins text-8xl font-[800] tracking-wider text-shadow-xl"
-        >
-          LAVISH
-        </motion.h1>
-        <motion.h1
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1 }}
-          className="italic font-libre text-5xl mb-4 ml-36 font-[800] tracking-wider text-shadow-xl"
-        >
-          Clusters
-        </motion.h1>
-
-        {/* Subheading */}
-        <motion.h1
-          initial={{ opacity: 0, y: -50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1 }}
-          className="font-poppins text-4xl mt-8 font-extrabold mb-4"
-        >
-          Effortless Glamour in Every Cluster
-        </motion.h1>
-        <motion.p
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 0.5 }}
-          className="text-xl mb-8"
-        >
-          Premium eyelash kits for influencers, makeup artists, and professionals
-        </motion.p>
-
-        {/* Product Carousel Card */}
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 0.5 }}
-          className="carousel bg-transparent p-4 mx-auto w-3/2 md:w-2/3 flex gap-10 items-center justify-center"
-        >
-          {/* Previous Button */}
-          <button
-            onClick={handlePrevious}
-            className="text-gray-200 hover:text-gray-600 transition text-xl"
-          >
-            <IoIosArrowBack />
-          </button>
-
-          {/* Image Display */}
-          <div className="carousel-image relative w-80 h-80 overflow-hidden ">
+      <Parallax
+        bgImage={bannerImg.src}
+        bgImageAlt="Hero Background"
+        strength={400}
+      >
+        <div className="relative flex items-center justify-center py-28" style={{ minHeight: '600px' }}>
+          <div className="content text-center px-6 w-full md:w-3/4 lg:w-2/3">
+            {/* Logo */}
             <Image
-              src={productImages[currentSlide]}
-              alt={`Product ${currentSlide + 1}`}
-              fill
-              className="object-cover"
+              src={logoImg}
+              className="invert w-[40%] md:w-[20%] mx-auto mb-8"
+              alt="logo"
             />
+
+            {/* Subheading */}
+            <motion.h1
+              initial={{ opacity: 0, y: -50 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1 }}
+              className="font-poppins text-3xl md:text-5xl lg:text-6xl font-extrabold mb-4"
+            >
+              Effortless Glamour in Every Cluster
+            </motion.h1>
+            <motion.p
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1, delay: 0.5 }}
+              className="text-lg md:text-xl lg:text-2xl mb-8"
+            >
+              Premium eyelash kits for influencers, makeup artists, and professionals
+            </motion.p>
+
+            {/* Product Carousel */}
+            <motion.div
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1, delay: 0.5 }}
+              className="carousel flex items-center justify-center gap-4"
+            >
+              {/* Previous Button */}
+              <button
+                onClick={handlePrevious}
+                className="text-white hover:text-gray-400 transition text-2xl"
+              >
+                <IoIosArrowBack />
+              </button>
+
+              {/* Image Display */}
+              <div className="relative w-60 h-60 md:w-72 md:h-72 lg:w-80 lg:h-80 overflow-hidden rounded-lg shadow-lg">
+                <Image
+                  src={productImages[currentSlide]}
+                  alt={`Product ${currentSlide + 1}`}
+                  fill
+                  className="object-cover"
+                />
+              </div>
+
+              {/* Next Button */}
+              <button
+                onClick={handleNext}
+                className="text-white hover:text-gray-400 transition text-2xl"
+              >
+                <IoIosArrowForward />
+              </button>
+            </motion.div>
+
+            {/* Shop Now Button */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 1, delay: 1 }}
+              className="flex justify-center mt-8"
+            >
+              <button className="flex items-center gap-2 custom-button bg-white text-gray-800 font-poppins font-[600] border-2 border-gray-800 px-4 py-2 rounded-lg transition-colors duration-300 ease-in-out hover:bg-gray-800 hover:text-white">
+                Shop Now
+                <FaLocationArrow />
+              </button>
+            </motion.div>
           </div>
-
-          {/* Next Button */}
-          <button
-            onClick={handleNext}
-            className="text-gray-200 text-3xl hover:text-gray-600 transition"
-          >
-            <IoIosArrowForward />
-          </button>
-        </motion.div>
-
-        {/* Shop Now Button */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1, delay: 1 }}
-          className="flex justify-center mt-8"
-        >
-          <button className="flex items-center gap-2 custom-button bg-white text-gray-800 font-poppins font-[600] border-2 border-gray-800 px-3 py-3 rounded-xl transition-colors duration-300 ease-in-out hover:bg-gray-800 hover:text-gray-200 hover:border-gray-200">
-            Shop Now
-            <FaLocationArrow />
-          </button>
-        </motion.div>
-      </div>
+        </div>
+      </Parallax>
     </section>
   );
 };

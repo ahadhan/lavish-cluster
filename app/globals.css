@@ -49,6 +49,12 @@ body {
   @apply font-poppins;
 }
 
+body, html {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;
@@ -83,34 +89,6 @@ body {
 }
 
 
-/* Parallax container with darkened background */
-/* Parallax effect for the background */
-/* Parallax effect for the background */
-.parallax-section {
-  position: relative;
-  overflow: hidden;
-  min-height: 100vh;
-}
-
-/* .parallax-background {
-  background-image: url('/assets/banner.jpg') !important;
-  background-position: center !important;
-  background-size: cover !important;
-  background-attachment: fixed !important;
-  background-repeat: no-repeat !important;
-  width: 100% !important;
-  height: 100% !important;
-  position: absolute !important;
-  top: 0 !important;
-  left: 0 !important;
-  z-index: -1 !important;
-} */
-
-.parallax-background {
-  background-color: red;
-  width: 50%;
-}
-
 
 /* Make sure the content is visible over the parallax background */
 .content {
@@ -144,8 +122,7 @@ body {
 .carousel {
   display: flex;
   align-items: center;
-  /* justify-content: space-between; */
-  
+  /* justify-content: space-between; */ 
 }
 
 .carousel-image {
@@ -212,4 +189,11 @@ body {
   100% {
     transform: translateX(-100%); /* Move completely to the left */
   }
+}
+
+
+.parallax-background {
+  background-attachment: fixed;
+  background-position: center;
+  background-size: cover;
 }
