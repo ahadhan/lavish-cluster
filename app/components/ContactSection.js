@@ -142,7 +142,7 @@ import '../../app/globals.css';
 const ContactSection = () => {
   return (
     <section id="contact" className="py-20 bg-gradient-top-to-bottom text-white">
-      <div className="container mx-auto px-6">
+      <div className="container mx-auto ">
         <div className="grid md:grid-cols-2 gap-12">
           {/* Contact Form */}
           <motion.div

@@ -149,7 +149,7 @@ const TestimonialsSection = () => {
   const { name, role, image, comment } = testimonials[currentTestimonial];
 
   return (
-    <section className="py-20 bg-gradient-top-to-bottom text-white">
+    <section id='testimonials' className="py-20 bg-gradient-top-to-bottom text-white">
       <div className="container mx-auto px-6 flex flex-col items-center">
         <h2 className="text-3xl md:text-4xl font-extrabold text-center mb-12 font-libre italic">
           What Our Customers Say

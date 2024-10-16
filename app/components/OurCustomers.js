@@ -106,7 +106,7 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import '../../app/globals.css';
 
-const VerticalStackCustomersSection = () => {
+const HowItWorks = () => {
   // Sample YouTube video links for iframe embedding with catchy lines
   const customerVideos = [
     {
@@ -130,7 +130,7 @@ const VerticalStackCustomersSection = () => {
   const [activeVideo, setActiveVideo] = useState(customerVideos[0]);
 
   return (
-    <section className="py-20 bg-gradient-bottom-to-top text-white">
+    <section id='how-it-works' className="py-20 bg-gradient-bottom-to-top text-white">
       <div className="container mx-auto px-6 flex flex-col items-center gap-8">
         {/* Centered Headings */}
         <motion.h2
@@ -205,4 +205,4 @@ const VerticalStackCustomersSection = () => {
   );
 };
 
-export default VerticalStackCustomersSection;
+export default HowItWorks;

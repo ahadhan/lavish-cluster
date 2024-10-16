@@ -81,7 +81,7 @@ const ProductSection = () => {
   };
 
   return (
-    <section className="py-20 bg-gradient-top-to-bottom text-primaryColor">
+    <section id='products' className="py-20 bg-gradient-top-to-bottom text-primaryColor">
       <div className="container mx-auto px-6">
         <motion.h2
           className="text-4xl font-extrabold mb-12 text-center text-gray-300 font-libre italic"
