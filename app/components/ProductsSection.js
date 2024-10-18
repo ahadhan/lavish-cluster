@@ -9,18 +9,21 @@ import productImage1 from '../assets/1.png';
 import productImage2 from '../assets/2.png';
 import productImage3 from '../assets/3.png';
 import productImage4 from '../assets/4.png';
+
+// Import from next/navigation instead of next/router
 import { useRouter } from 'next/navigation';
 
 const ProductSection = () => {
   const router = useRouter();
 
-  const handleShopNow = (productId) => {
-    router.push(`/product/${productId}`);
+  const handleShopNow = () => {
+    router.push(`/products/${products[currentProduct].id}`);
   };
 
   // Product data array
   const products = [
     {
+      id: 1,
       name: 'Classic Elegance Lash Kit',
       description: [
         'Waterproof and long-lasting bond',
@@ -32,6 +35,7 @@ const ProductSection = () => {
       image: productImage1,
     },
     {
+      id: 2,
       name: 'Voluminous Glam Lash Kit',
       description: [
         'Adds volume to your lashes',
@@ -43,6 +47,7 @@ const ProductSection = () => {
       image: productImage2,
     },
     {
+      id: 3,
       name: 'Natural Beauty Lash Kit',
       description: [
         'Enhances your natural lashes',
@@ -54,6 +59,7 @@ const ProductSection = () => {
       image: productImage3,
     },
     {
+      id: 4,
       name: 'Long Lasting Eye Lash Pack',
       description: [
         'Enhances your natural lashes',
@@ -136,7 +142,7 @@ const ProductSection = () => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               className="flex items-center gap-3 underline hover:text-gray-400 cursor-pointer text-skinColor duration-300"
-              onClick={() => handleShopNow(currentProduct)}
+              onClick={handleShopNow}
             >
               <p className="font-libre italic">Shop Now</p>
               <FaArrowRightLong className="font-[300] mr-2" />
