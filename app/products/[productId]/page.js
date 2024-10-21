@@ -297,6 +297,8 @@ import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 import Image from 'next/image';
 
+
+
 const ProductDetails = () => {
     const { productId } = useParams();
     const [product, setProduct] = useState(null);
@@ -397,6 +399,8 @@ const ProductDetails = () => {
 
             {/* Product Details Section */}
             <div className="flex flex-col items-center justify-center flex-grow mx-8">
+
+                <h1  className='text-white text-3xl text-center font-libre italic font-bold  my-10'> Product Preview</h1>
                 <motion.div
                     initial={{ opacity: 0, y: -50 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -427,7 +431,7 @@ const ProductDetails = () => {
                     <p className=" text-gray-400 mb-4 font-libre">
                         <strong>Stock:</strong> {product.stock > 0 ? `${product.stock} in stock` : 'Out of stock'}
                     </p>
-
+ 
                     {/* Product Price */}
                     <div className="text-2xl font-semibold text-gray-900 mb-4">{product.price}</div>
 

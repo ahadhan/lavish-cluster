@@ -10,11 +10,13 @@ import productImage2 from '../assets/2.png';
 import productImage3 from '../assets/3.png';
 import productImage4 from '../assets/4.png';
 
-// Import from next/navigation instead of next/router
 import { useRouter } from 'next/navigation';
 
+// Import from next/navigation instead of next/router
+
+
 const ProductSection = () => {
-  const router = useRouter();
+  const router = useRouter()
 
   const handleShopNow = () => {
     router.push(`/products/${products[currentProduct].id}`);
@@ -170,7 +172,9 @@ const ProductSection = () => {
           </motion.button>
         </div>
       </div>
-    </section>
+
+      
+    </section >
   );
 };
 
