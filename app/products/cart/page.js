@@ -15,7 +15,9 @@ import CheckOutPage from "../../components/CheckoutPage";
 if (process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY === undefined) {
   console.log(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
   throw new Error("NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY is not defined");
-} 
+}
+
+// console.log('Received items:', items);
 
 // Initialize Stripe
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
@@ -63,10 +65,54 @@ const CartPage = () => {
   }
 
   // Handle the checkout process
+  // const handleCheckout = async () => {
+  //   setLoading(true);
+  //   const stripe = await stripePromise;
+
+  //   // Define the items to be passed to the Stripe session
+  //   const items = [
+  //     {
+  //       name: name,
+  //       price: price,
+  //       quantity: quantity,
+  //       image: image,
+  //     },
+  //   ];
+
+  //   try {
+  //     const response = await fetch('/api/checkout', {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify({
+  //         items,
+  //         shippingLocation,
+  //       }),
+  //     });
+
+  //     const { id: sessionId } = await response.json(); // Fixed extraction of sessionId
+
+  //     // Redirect to Stripe's checkout page using the sessionId
+  //     const result = await stripe.redirectToCheckout({
+  //       sessionId,
+  //     });
+
+  //     if (result.error) {
+  //       console.error(result.error.message);
+  //     }
+  //   } catch (error) {
+  //     console.error('Error creating Stripe checkout session:', error);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
+
   const handleCheckout = async () => {
     setLoading(true);
     const stripe = await stripePromise;
-
+  
     // Define the items to be passed to the Stripe session
     const items = [
       {
@@ -76,7 +122,7 @@ const CartPage = () => {
         image: image,
       },
     ];
-
+  
     try {
       const response = await fetch('/api/checkout', {
         method: 'POST',
@@ -88,14 +134,18 @@ const CartPage = () => {
           shippingLocation,
         }),
       });
-
-      const session = await response.json();
-
+  
+      const { id: sessionId } = await response.json();
+  
+      if (!sessionId) {
+        throw new Error('Failed to create a session');
+      }
+  
       // Redirect to Stripe's checkout page
       const result = await stripe.redirectToCheckout({
-        sessionId: session.id,
+        sessionId,
       });
-
+  
       if (result.error) {
         console.error(result.error.message);
       }
@@ -105,7 +155,7 @@ const CartPage = () => {
       setLoading(false);
     }
   };
-
+  
   return (
     <div className="flex flex-col min-h-screen justify-between bg-gradient-bottom-to-top">
       <Header />
