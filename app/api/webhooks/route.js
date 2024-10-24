@@ -11,7 +11,10 @@ export const config = {
   },
 };
 
+
+
 export default async function handler(req, res) {
+  console.log("webhook handler working successfully!")
   if (req.method === 'POST') {
     try {
       // Use native Buffer to read the request body
@@ -20,6 +23,7 @@ export default async function handler(req, res) {
         req.on('data', (chunk) => {
           data += chunk;
         });
+        
         req.on('end', () => resolve(Buffer.from(data)));
         req.on('error', (err) => reject(err));
       });

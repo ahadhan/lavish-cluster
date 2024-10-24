@@ -22,11 +22,12 @@ const CartPage = () => {
   const description = "High-quality lash kit that enhances the look of your lashes."; // Placeholder description
   const id = searchParams.get('id');
 
-  // State for quantity and shipping location
+  // State for quantity, shipping location, customer email, and loading
   const [quantity, setQuantity] = useState(1); // Default quantity of 1
   const [shippingLocation, setShippingLocation] = useState(''); // Placeholder for shipping location
   const [displayedAddress, setDisplayedAddress] = useState(''); // To display the shipping address above the input
   const [loading, setLoading] = useState(false); // Loading state for the payment process
+  const [customerEmail, setCustomerEmail] = useState(''); // Customer email input
 
   // Shipping cost
   const shippingCost = 5.0; // Fixed shipping cost
@@ -53,7 +54,6 @@ const CartPage = () => {
     return Math.round(amount * 100); // Assuming USD (1 dollar = 100 cents)
   }
 
-  // Handle the checkout process
   // Handle the checkout process with email verification
   const handleCheckout = async () => {
     setLoading(true);
@@ -63,7 +63,7 @@ const CartPage = () => {
     const items = [
       {
         name: name, // Product name from searchParams
-        price: price, // Price in cents (make sure this is being sent as a number, not string)
+        price: convertToSubcurrency(price), // Price in cents
         quantity: quantity, // Quantity selected by the user
       },
     ];
@@ -77,27 +77,37 @@ const CartPage = () => {
         },
         body: JSON.stringify({
           items,
-          email: customerEmail, // Assume you collect email from somewhere in the UI (e.g., a form or profile)
+          email: customerEmail, // User email input
         }),
       });
 
-      const { id: sessionId, message } = await response.json();
+      const data = await response.json();
+
+      if (response.status !== 200) {
+        throw new Error(data.error || 'Failed to create a session');
+      }
+
+      const { id: sessionId, message } = data;
 
       if (!sessionId) {
-        throw new Error('Failed to create a session');
+        throw new Error('Session ID not returned by API');
       }
 
       // Step 2: Notify user to check email for verification
-      alert('A verification email has been sent. Please check your email and verify to proceed to payment.');
+      // alert('A verification email has been sent. Please check your email and verify to proceed to payment.');
 
-      // Once the user verifies their email, they can be redirected to the Stripe checkout page.
+      const result = stripe.redirectToCheckout({
+        sessionId
+      });
+
+
     } catch (error) {
-      console.error('Error creating Stripe checkout session:', error);
+      console.error('Error creating Stripe session:', error); // Log the full error
+      alert(`Error: ${error.message}`);
     } finally {
       setLoading(false);
     }
   };
-
 
 
   return (
@@ -180,14 +190,15 @@ const CartPage = () => {
             <span>£{total.toFixed(2)}</span>
           </div>
 
-          <div className="mt-6">
+          {/* Email Input for Verification */}
+          <div className="my-6">
             <label className="block text-white mb-2">Email Address:</label>
             <input
               type="email"
               value={customerEmail}
               onChange={(e) => setCustomerEmail(e.target.value)}
               className="w-full p-2 bg-gray-800 text-white rounded-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-secondaryColor"
-              placeholder="Enter your email"
+              placeholder="Enter your email for verification"
             />
           </div>
 
@@ -199,8 +210,6 @@ const CartPage = () => {
           >
             {loading ? 'Processing...' : 'Proceed to Payment'}
           </button>
-
-
         </div>
       </div>
 
