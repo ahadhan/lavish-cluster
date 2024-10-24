@@ -1,16 +1,16 @@
+// app/products/cart/page.js
+
 'use client';
 
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
-import Header from '../../components/Header';
-import Footer from '../../components/Footer';
 
 import { loadStripe } from "@stripe/stripe-js";
-import { NextResponse } from 'next/server';
 
-// Removed the initialization of Stripe outside the component
+// Removed unused import: import { NextResponse } from 'next/server';
 
+// Load Stripe asynchronously inside the component
 const CartPage = () => {
   const searchParams = useSearchParams(); // Get query params from the URL
   const router = useRouter();
@@ -61,9 +61,9 @@ const CartPage = () => {
   };
 
   // Convert amount to subcurrency
-  function convertToSubcurrency(amount) {
+  const convertToSubcurrency = (amount) => {
     return Math.round(amount * 100); // Assuming USD (1 dollar = 100 cents)
-  }
+  };
 
   // Handle the checkout process with email verification
   const handleCheckout = async () => {
@@ -110,7 +110,7 @@ const CartPage = () => {
         throw new Error(data.error || 'Failed to create a session');
       }
 
-      const { id: sessionId, message } = data;
+      const { id: sessionId } = data;
 
       if (!sessionId) {
         throw new Error('Session ID not returned by API');
@@ -134,21 +134,18 @@ const CartPage = () => {
     }
   };
 
-
   // Early return if critical query parameters are missing
   if (!name || !priceParam || !image || !id) {
     return (
       <div className="flex flex-col min-h-screen justify-center items-center bg-gradient-bottom-to-top">
-        <Header />
         <p className="text-white text-xl">Invalid product details. Please go back and try again.</p>
-        <Footer />
       </div>
     );
   }
 
   return (
     <div className="flex flex-col min-h-screen justify-between bg-gradient-bottom-to-top">
-      <Header />
+      {/* Header is already included in the layout */}
 
       {/* Cart Layout */}
       <div className="container mx-auto px-6 py-32 grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -163,7 +160,7 @@ const CartPage = () => {
 
             <div className="flex-1">
               <h3 className="text-xl font-bold text-white mb-2">{name}</h3>
-              <p className="text-md text-gray-400 mb-4">{description}</p>
+              <p className="text-md text-gray-400 mb-4">High-quality lash kit that enhances the look of your lashes.</p>
 
               {/* Quantity Selector */}
               <label className="block text-gray-400 mb-2">Quantity:</label>
@@ -249,7 +246,6 @@ const CartPage = () => {
         </div>
       </div>
 
-      <Footer />
     </div>
   );
 };
