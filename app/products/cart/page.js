@@ -7,19 +7,8 @@ import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 
 import { loadStripe } from "@stripe/stripe-js";
-import { Elements } from "@stripe/react-stripe-js";
-
-import CheckOutPage from "../../components/CheckoutPage";
 
 // Load Stripe publishable key
-if (process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY === undefined) {
-  console.log(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
-  throw new Error("NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY is not defined");
-}
-
-// console.log('Received items:', items);
-
-// Initialize Stripe
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
 
 const CartPage = () => {
@@ -59,71 +48,28 @@ const CartPage = () => {
     }
   };
 
-  // Convert amount to subunits (e.g., cents)
+  // Convert amount to subcurrency
   function convertToSubcurrency(amount) {
     return Math.round(amount * 100); // Assuming USD (1 dollar = 100 cents)
   }
 
   // Handle the checkout process
-  // const handleCheckout = async () => {
-  //   setLoading(true);
-  //   const stripe = await stripePromise;
-
-  //   // Define the items to be passed to the Stripe session
-  //   const items = [
-  //     {
-  //       name: name,
-  //       price: price,
-  //       quantity: quantity,
-  //       image: image,
-  //     },
-  //   ];
-
-  //   try {
-  //     const response = await fetch('/api/checkout', {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //       },
-  //       body: JSON.stringify({
-  //         items,
-  //         shippingLocation,
-  //       }),
-  //     });
-
-  //     const { id: sessionId } = await response.json(); // Fixed extraction of sessionId
-
-  //     // Redirect to Stripe's checkout page using the sessionId
-  //     const result = await stripe.redirectToCheckout({
-  //       sessionId,
-  //     });
-
-  //     if (result.error) {
-  //       console.error(result.error.message);
-  //     }
-  //   } catch (error) {
-  //     console.error('Error creating Stripe checkout session:', error);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
-
+  // Handle the checkout process with email verification
   const handleCheckout = async () => {
     setLoading(true);
     const stripe = await stripePromise;
-  
+
     // Define the items to be passed to the Stripe session
     const items = [
       {
-        name: name,
-        price: price,
-        quantity: quantity,
-        image: image,
+        name: name, // Product name from searchParams
+        price: price, // Price in cents (make sure this is being sent as a number, not string)
+        quantity: quantity, // Quantity selected by the user
       },
     ];
-  
+
     try {
+      // Step 1: Create a Stripe Checkout session and send email verification
       const response = await fetch('/api/checkout', {
         method: 'POST',
         headers: {
@@ -131,31 +77,29 @@ const CartPage = () => {
         },
         body: JSON.stringify({
           items,
-          shippingLocation,
+          email: customerEmail, // Assume you collect email from somewhere in the UI (e.g., a form or profile)
         }),
       });
-  
-      const { id: sessionId } = await response.json();
-  
+
+      const { id: sessionId, message } = await response.json();
+
       if (!sessionId) {
         throw new Error('Failed to create a session');
       }
-  
-      // Redirect to Stripe's checkout page
-      const result = await stripe.redirectToCheckout({
-        sessionId,
-      });
-  
-      if (result.error) {
-        console.error(result.error.message);
-      }
+
+      // Step 2: Notify user to check email for verification
+      alert('A verification email has been sent. Please check your email and verify to proceed to payment.');
+
+      // Once the user verifies their email, they can be redirected to the Stripe checkout page.
     } catch (error) {
       console.error('Error creating Stripe checkout session:', error);
     } finally {
       setLoading(false);
     }
   };
-  
+
+
+
   return (
     <div className="flex flex-col min-h-screen justify-between bg-gradient-bottom-to-top">
       <Header />
@@ -236,6 +180,17 @@ const CartPage = () => {
             <span>£{total.toFixed(2)}</span>
           </div>
 
+          <div className="mt-6">
+            <label className="block text-white mb-2">Email Address:</label>
+            <input
+              type="email"
+              value={customerEmail}
+              onChange={(e) => setCustomerEmail(e.target.value)}
+              className="w-full p-2 bg-gray-800 text-white rounded-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-secondaryColor"
+              placeholder="Enter your email"
+            />
+          </div>
+
           {/* Payment Button */}
           <button
             className="w-full bg-white text-gray-900 font-bold border-2 border-gray-950 py-3 px-4 rounded-lg hover:bg-gray-800 hover:text-white transition duration-300"
@@ -244,6 +199,8 @@ const CartPage = () => {
           >
             {loading ? 'Processing...' : 'Proceed to Payment'}
           </button>
+
+
         </div>
       </div>
 
