@@ -1,26 +1,26 @@
 'use client';
 
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 
 import { loadStripe } from "@stripe/stripe-js";
+import { NextResponse } from 'next/server';
 
-// Load Stripe publishable key
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
+// Removed the initialization of Stripe outside the component
 
 const CartPage = () => {
   const searchParams = useSearchParams(); // Get query params from the URL
   const router = useRouter();
 
-  // Retrieve product data from query params
-  const name = searchParams.get('name');
-  const price = parseFloat(searchParams.get('price').replace('£', '')); // Convert price to number
-  const image = searchParams.get('image');
-  const description = "High-quality lash kit that enhances the look of your lashes."; // Placeholder description
-  const id = searchParams.get('id');
+  // Retrieve product data from query params with safety checks
+  const name = searchParams.get('name') || 'Default Product Name';
+  const priceParam = searchParams.get('price');
+  const price = priceParam ? parseFloat(priceParam.replace('£', '')) : 0;
+  const image = searchParams.get('image') || '/default-image.png'; // Provide a default image path
+  const id = searchParams.get('id') || 'default-id';
 
   // State for quantity, shipping location, customer email, and loading
   const [quantity, setQuantity] = useState(1); // Default quantity of 1
@@ -29,6 +29,17 @@ const CartPage = () => {
   const [loading, setLoading] = useState(false); // Loading state for the payment process
   const [customerEmail, setCustomerEmail] = useState(''); // Customer email input
 
+  // Stripe instance
+  const [stripe, setStripe] = useState(null);
+
+  useEffect(() => {
+    const initializeStripe = async () => {
+      const stripeInstance = await loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
+      setStripe(stripeInstance);
+    };
+    initializeStripe();
+  }, []);
+
   // Shipping cost
   const shippingCost = 5.0; // Fixed shipping cost
   const subtotal = price * quantity; // Calculate subtotal
@@ -36,7 +47,7 @@ const CartPage = () => {
 
   // Handle changing the quantity
   const handleQuantityChange = (e) => {
-    const value = Math.max(1, parseInt(e.target.value)); // Ensure quantity is at least 1
+    const value = Math.max(1, parseInt(e.target.value) || 1); // Ensure quantity is at least 1 and a valid number
     setQuantity(value);
   };
 
@@ -57,7 +68,19 @@ const CartPage = () => {
   // Handle the checkout process with email verification
   const handleCheckout = async () => {
     setLoading(true);
-    const stripe = await stripePromise;
+
+    if (!stripe) {
+      alert('Stripe is not loaded yet. Please try again later.');
+      setLoading(false);
+      return;
+    }
+
+    // Validate customer email
+    if (!customerEmail.trim()) {
+      alert('Please enter a valid email address.');
+      setLoading(false);
+      return;
+    }
 
     // Define the items to be passed to the Stripe session
     const items = [
@@ -93,13 +116,15 @@ const CartPage = () => {
         throw new Error('Session ID not returned by API');
       }
 
-      // Step 2: Notify user to check email for verification
-      // alert('A verification email has been sent. Please check your email and verify to proceed to payment.');
-
-      const result = stripe.redirectToCheckout({
+      // Step 2: Redirect to Stripe Checkout
+      const result = await stripe.redirectToCheckout({
         sessionId
       });
 
+      if (result.error) {
+        // Inform the customer that there was an error
+        alert(result.error.message);
+      }
 
     } catch (error) {
       console.error('Error creating Stripe session:', error); // Log the full error
@@ -109,6 +134,17 @@ const CartPage = () => {
     }
   };
 
+
+  // Early return if critical query parameters are missing
+  if (!name || !priceParam || !image || !id) {
+    return (
+      <div className="flex flex-col min-h-screen justify-center items-center bg-gradient-bottom-to-top">
+        <Header />
+        <p className="text-white text-xl">Invalid product details. Please go back and try again.</p>
+        <Footer />
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col min-h-screen justify-between bg-gradient-bottom-to-top">
