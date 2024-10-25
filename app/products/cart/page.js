@@ -5,12 +5,11 @@
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
-
 import { loadStripe } from "@stripe/stripe-js";
 
-// Removed unused import: import { NextResponse } from 'next/server';
+// Initialize Stripe outside the component to prevent re-initialization
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
 
-// Load Stripe asynchronously inside the component
 const CartPage = () => {
   const searchParams = useSearchParams(); // Get query params from the URL
   const router = useRouter();
@@ -28,19 +27,9 @@ const CartPage = () => {
   const [displayedAddress, setDisplayedAddress] = useState(''); // To display the shipping address above the input
   const [loading, setLoading] = useState(false); // Loading state for the payment process
   const [customerEmail, setCustomerEmail] = useState(''); // Customer email input
+  const [error, setError] = useState(null); // Error message
 
-  // Stripe instance
-  const [stripe, setStripe] = useState(null);
-
-  useEffect(() => {
-    const initializeStripe = async () => {
-      const stripeInstance = await loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
-      setStripe(stripeInstance);
-    };
-    initializeStripe();
-  }, []);
-
-  // Shipping cost
+  // Calculate shipping cost, subtotal, and total
   const shippingCost = 5.0; // Fixed shipping cost
   const subtotal = price * quantity; // Calculate subtotal
   const total = subtotal + shippingCost; // Total amount
@@ -60,7 +49,7 @@ const CartPage = () => {
     }
   };
 
-  // Convert amount to subcurrency
+  // Convert amount to subcurrency (e.g., dollars to cents)
   const convertToSubcurrency = (amount) => {
     return Math.round(amount * 100); // Assuming USD (1 dollar = 100 cents)
   };
@@ -68,30 +57,25 @@ const CartPage = () => {
   // Handle the checkout process with email verification
   const handleCheckout = async () => {
     setLoading(true);
-
-    if (!stripe) {
-      alert('Stripe is not loaded yet. Please try again later.');
-      setLoading(false);
-      return;
-    }
+    setError(null);
 
     // Validate customer email
     if (!customerEmail.trim()) {
-      alert('Please enter a valid email address.');
+      setError('Please enter a valid email address.');
       setLoading(false);
       return;
     }
 
-    // Define the items to be passed to the Stripe session
-    const items = [
-      {
-        name: name, // Product name from searchParams
-        price: convertToSubcurrency(price), // Price in cents
-        quantity: quantity, // Quantity selected by the user
-      },
-    ];
-
     try {
+      // Prepare cart data
+      const items = [
+        {
+          name: name, // Product name from searchParams
+          price: convertToSubcurrency(price), // Price in cents
+          quantity: quantity, // Quantity selected by the user
+        },
+      ];
+
       // Step 1: Create a Stripe Checkout session and send email verification
       const response = await fetch('/api/checkout', {
         method: 'POST',
@@ -110,25 +94,25 @@ const CartPage = () => {
         throw new Error(data.error || 'Failed to create a session');
       }
 
-      const { id: sessionId } = data;
+      const { sessionId } = data;
 
       if (!sessionId) {
         throw new Error('Session ID not returned by API');
       }
 
       // Step 2: Redirect to Stripe Checkout
-      const result = await stripe.redirectToCheckout({
-        sessionId
+      const stripe = await stripePromise;
+      const { error: stripeError } = await stripe.redirectToCheckout({
+        sessionId,
       });
 
-      if (result.error) {
-        // Inform the customer that there was an error
-        alert(result.error.message);
+      if (stripeError) {
+        console.error('Stripe Checkout error:', stripeError);
+        setError(stripeError.message);
       }
-
-    } catch (error) {
-      console.error('Error creating Stripe session:', error); // Log the full error
-      alert(`Error: ${error.message}`);
+    } catch (err) {
+      console.error('Checkout error:', err);
+      setError(err.message);
     } finally {
       setLoading(false);
     }
@@ -160,7 +144,7 @@ const CartPage = () => {
 
             <div className="flex-1">
               <h3 className="text-xl font-bold text-white mb-2">{name}</h3>
-              <p className="text-md text-gray-400 mb-4">High-quality lash kit that enhances the look of your lashes.</p>
+              <p className="text-md text-gray-400 mb-4">High-quality product that meets your needs.</p>
 
               {/* Quantity Selector */}
               <label className="block text-gray-400 mb-2">Quantity:</label>
@@ -234,6 +218,8 @@ const CartPage = () => {
               placeholder="Enter your email for verification"
             />
           </div>
+
+          {error && <div className="text-red-500 mb-4">{error}</div>}
 
           {/* Payment Button */}
           <button
