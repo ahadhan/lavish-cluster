@@ -104,9 +104,7 @@ import { NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
 
 // Initialize Stripe with your secret key and specify the API version
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-  apiVersion: '2023-10-25',
-});
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 export async function POST(request) {
   try {
