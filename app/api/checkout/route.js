@@ -104,7 +104,9 @@ import { NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
 
 // Initialize Stripe with your secret key and specify the API version
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+  apiVersion: '2024-09-30', // Update to your Stripe API version
+});
 
 export const runtime = 'nodejs';
 
@@ -155,7 +157,7 @@ export async function POST(request) {
       typeof session.payment_intent === 'string' ? session.payment_intent : session.payment_intent.id;
 
     // Step 2: Send a verification email to the user with Approve and Cancel links
-    await sendVerificationEmail(email, paymentIntentId);
+    await sendVerificationEmail(email, session.id);
     console.log('Verification email sent successfully.');
 
     return new NextResponse(JSON.stringify({ sessionId: session.id }), {
