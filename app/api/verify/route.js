@@ -37,15 +37,22 @@
 
 
 
-// api/verify/route.js
+// app/api/verify/route.js
 
 import Stripe from 'stripe';
 import { NextResponse } from 'next/server';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-  apiVersion: '2023-10-25',
+  apiVersion: '2024-09-30',
 });
 
+export const runtime = 'nodejs';
+
+/**
+ * Handles verification actions (approve or cancel) from the verification email.
+ * @param {Request} request - The incoming request object.
+ * @returns {Promise<Response>} - The response to redirect the user.
+ */
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
   const paymentIntentId = searchParams.get('payment_intent');
@@ -58,7 +65,7 @@ export async function GET(request) {
   }
 
   try {
-    // Retrieve the Payment Intent to ensure it exists and its status
+    // Retrieve the Payment Intent
     const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
 
     if (!paymentIntent) {
@@ -75,7 +82,7 @@ export async function GET(request) {
       console.log(`PaymentIntent captured: ${capturedPaymentIntent.id}`);
       // TODO: Update your database to mark the payment as completed
 
-      // Optionally, redirect the user to a confirmation page
+      // Redirect to confirmation page
       return NextResponse.redirect(`${process.env.BASE_URL}/confirmation?status=approved`);
     } else if (action === 'cancel') {
       // Cancel the Payment Intent
@@ -83,7 +90,7 @@ export async function GET(request) {
       console.log(`PaymentIntent canceled: ${canceledPaymentIntent.id}`);
       // TODO: Update your database to mark the payment as canceled
 
-      // Optionally, redirect the user to a cancellation page
+      // Redirect to confirmation page
       return NextResponse.redirect(`${process.env.BASE_URL}/confirmation?status=canceled`);
     } else {
       return new NextResponse('Invalid action parameter.', { status: 400 });

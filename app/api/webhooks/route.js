@@ -81,27 +81,20 @@
 import Stripe from 'stripe';
 import { NextResponse } from 'next/server';
 
-// Initialize Stripe with your secret key and specify the API version
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-  apiVersion: '2023-10-25', // Update to the latest API version if needed
+  apiVersion: '2024-09-30',
 });
 
-// Specify the runtime environment
 export const runtime = 'nodejs';
 
 /**
- * Handles POST requests to the webhook endpoint.
+ * Handles Stripe webhook events.
  * @param {Request} request - The incoming request object.
  * @returns {Promise<Response>} - The response to send back to Stripe.
  */
 export async function POST(request) {
-  console.log("Webhook handler working successfully!");
-
   try {
-    // Retrieve the raw request body as text
     const rawBody = await request.text();
-
-    // Get the Stripe signature from the headers
     const sig = request.headers.get('stripe-signature');
 
     if (!sig) {
@@ -109,24 +102,24 @@ export async function POST(request) {
       return new NextResponse('Missing Stripe signature', { status: 400 });
     }
 
-    // Verify the event using Stripe's webhook secret
     const event = stripe.webhooks.constructEvent(
       rawBody,
       sig,
       process.env.STRIPE_WEBHOOK_SECRET
     );
 
-    // Handle the event
+    console.log(`Received event: ${event.type}`);
+
     switch (event.type) {
       case 'payment_intent.succeeded':
-        const paymentIntentSucceeded = event.data.object;
-        console.log(`PaymentIntent for £${(paymentIntentSucceeded.amount / 100).toFixed(2)} succeeded.`);
+        const paymentIntent = event.data.object;
+        console.log(`PaymentIntent ${paymentIntent.id} succeeded.`);
         // TODO: Update your database to mark the payment as completed
         break;
 
       case 'payment_intent.canceled':
-        const paymentIntentCanceled = event.data.object;
-        console.log(`PaymentIntent ${paymentIntentCanceled.id} was canceled.`);
+        const canceledIntent = event.data.object;
+        console.log(`PaymentIntent ${canceledIntent.id} was canceled.`);
         // TODO: Update your database to mark the payment as canceled
         break;
 
@@ -136,10 +129,9 @@ export async function POST(request) {
         console.log(`Unhandled event type: ${event.type}`);
     }
 
-    // Respond to Stripe that the webhook was received successfully
     return NextResponse.json({ received: true }, { status: 200 });
   } catch (err) {
-    console.error('Error in webhook handler:', err);
+    console.error('Webhook Error:', err.message);
     return new NextResponse(`Webhook Error: ${err.message}`, { status: 400 });
   }
 }
