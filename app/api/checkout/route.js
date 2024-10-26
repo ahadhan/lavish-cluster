@@ -97,22 +97,14 @@
 
 
 
-// app/api/checkout/route.js
-
 import Stripe from 'stripe';
 import { NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
 
-// Initialize Stripe with your secret key and specify the API version
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 export const runtime = 'nodejs';
 
-/**
- * Handles POST requests to create a Stripe Checkout session and send verification emails.
- * @param {Request} request - The incoming request object.
- * @returns {Promise<Response>} - The response to send back to the client.
- */
 export async function POST(request) {
   try {
     const { items, email } = await request.json();
@@ -125,38 +117,26 @@ export async function POST(request) {
       });
     }
 
-    // Step 1: Create a Stripe Checkout session with manual capture
+    // Create Stripe Checkout session with automatic payment capture
     const session = await stripe.checkout.sessions.create({
-      payment_method_types: ['card'], // Includes Apple Pay and Google Pay via Payment Request API
+      payment_method_types: ['card'],
       line_items: items.map((item) => ({
         price_data: {
-          currency: 'usd', // Ensure currency matches your requirements
+          currency: 'usd',
           product_data: {
             name: item.name,
           },
-          unit_amount: convertToSubcurrency(item.price), // Price in cents
+          unit_amount: convertToSubcurrency(item.price),
         },
         quantity: item.quantity,
       })),
       mode: 'payment',
       customer_email: email,
-      payment_intent_data: {
-        capture_method: 'manual', // Manual capture to allow email verification
-      },
       success_url: `${process.env.BASE_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${process.env.BASE_URL}/cancel`,
-      // metadata: { /* ... */ },
     });
 
     console.log('Stripe session created:', session.id);
-
-    // Ensure you pass the correct Payment Intent ID
-    const paymentIntentId =
-      typeof session.payment_intent === 'string' ? session.payment_intent : session.payment_intent.id;
-
-    // Step 2: Send a verification email to the user with Approve and Cancel links
-    await sendVerificationEmail(email, paymentIntentId);
-    console.log('Verification email sent successfully.');
 
     return new NextResponse(JSON.stringify({ sessionId: session.id }), {
       headers: { 'Content-Type': 'application/json' },
@@ -170,64 +150,65 @@ export async function POST(request) {
   }
 }
 
-/**
- * Sends a verification email to the customer with Approve and Cancel links.
- * @param {string} email - The customer's email address.
- * @param {string} paymentIntentId - The ID of the Stripe Payment Intent.
- */
-async function sendVerificationEmail(email, paymentIntentId) {
-  console.log("Initiating email sending to:", email);
-  
-  // Create a transporter using SMTP (Gmail in this case)
+// Webhook to handle successful payment events from Stripe
+export async function webhookHandler(req, res) {
+  if (req.method === 'POST') {
+    const signature = req.headers['stripe-signature'];
+    const payload = await buffer(req);
+
+    let event;
+    try {
+      event = stripe.webhooks.constructEvent(payload, signature, process.env.STRIPE_WEBHOOK_SECRET);
+    } catch (err) {
+      console.error('Webhook signature verification failed.', err.message);
+      return res.status(400).send(`Webhook Error: ${err.message}`);
+    }
+
+    if (event.type === 'checkout.session.completed') {
+      const session = event.data.object;
+      const email = session.customer_email;
+      const productName = session.metadata.product_name || "your purchased item"; // Adjust if needed
+      const deliveryTime = "5-7 business days";
+
+      // Send a confirmation email after successful payment
+      await sendConfirmationEmail(email, productName, deliveryTime);
+    }
+
+    res.status(200).send({ received: true });
+  } else {
+    res.setHeader('Allow', 'POST');
+    res.status(405).end('Method Not Allowed');
+  }
+}
+
+// Confirmation email function
+async function sendConfirmationEmail(email, productName, deliveryTime) {
   let transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-      user: process.env.GMAIL_USER, // Your Gmail address
-      pass: process.env.GMAIL_PASS, // Your Gmail App Password
+      user: process.env.GMAIL_USER,
+      pass: process.env.GMAIL_PASS,
     },
   });
-
-  // Verify transporter configuration
-  try {
-    await transporter.verify();
-    console.log('Nodemailer transporter verified successfully.');
-  } catch (verifyError) {
-    console.error('Error verifying Nodemailer transporter:', verifyError);
-    throw new Error('Failed to configure email transporter.');
-  }
-
-  // Generate verification links
-  const approveLink = `${process.env.BASE_URL}/api/verify?payment_intent=${paymentIntentId}&action=approve`;
-  const cancelLink = `${process.env.BASE_URL}/api/verify?payment_intent=${paymentIntentId}&action=cancel`;
 
   const mailOptions = {
     from: `"Your Store" <${process.env.GMAIL_USER}>`,
     to: email,
-    subject: 'Verify Your Payment to Complete Your Order',
-    text: `Thank you for your purchase! Please verify your payment by clicking one of the links below:\n\nApprove Payment: ${approveLink}\nCancel Payment: ${cancelLink}`,
-    html: `
-      <p>Thank you for your purchase!</p>
-      <p>Please verify your payment by clicking one of the links below:</p>
-      <p><a href="${approveLink}">Approve Payment</a></p>
-      <p><a href="${cancelLink}">Cancel Payment</a></p>
-    `,
+    subject: 'Order Confirmation',
+    text: `Congratulations! You just purchased ${productName}. You will receive it within ${deliveryTime}.`,
+    html: `<p>Congratulations! You just purchased <strong>${productName}</strong>. You will receive it within <strong>${deliveryTime}</strong>.</p>`,
   };
 
   try {
-    console.log('Sending email to:', email);
+    console.log('Sending confirmation email to:', email);
     const info = await transporter.sendMail(mailOptions);
-    console.log('Verification email sent:', info.response);
+    console.log('Confirmation email sent:', info.response);
   } catch (error) {
-    console.error('Error sending verification email:', error);
-    throw new Error('Failed to send verification email.');
+    console.error('Error sending confirmation email:', error);
   }
 }
 
-/**
- * Helper function to convert dollars to cents.
- * @param {number} amount - The amount in dollars.
- * @returns {number} - The amount in cents.
- */
+// Helper function to convert dollars to cents
 function convertToSubcurrency(amount) {
   return Math.round(amount * 100); // Assuming USD (1 dollar = 100 cents)
 }

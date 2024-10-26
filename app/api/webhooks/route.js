@@ -76,60 +76,76 @@
 
 
 
-// app/api/webhooks/route.js
-
 import Stripe from 'stripe';
-import { NextResponse } from 'next/server';
+import nodemailer from 'nodemailer';
+import { buffer } from 'micro';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
-export const runtime = 'nodejs';
+// Disable Next.js body parsing, as Stripe requires the raw body to verify webhook signatures
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
 
-/**
- * Handles Stripe webhook events.
- * @param {Request} request - The incoming request object.
- * @returns {Promise<Response>} - The response to send back to Stripe.
- */
-export async function POST(request) {
+export default async function handler(req, res) {
+  if (req.method === 'POST') {
+    const buf = await buffer(req);
+    const signature = req.headers['stripe-signature'];
+
+    let event;
+
+    try {
+      event = stripe.webhooks.constructEvent(buf, signature, process.env.STRIPE_WEBHOOK_SECRET);
+    } catch (err) {
+      console.error('Webhook signature verification failed.', err.message);
+      return res.status(400).send(`Webhook Error: ${err.message}`);
+    }
+
+    // Handle the event
+    if (event.type === 'checkout.session.completed') {
+      const session = event.data.object;
+
+      // Extract email and product details from the session
+      const customerEmail = session.customer_email;
+      const productName = session.metadata.product_name; // Use metadata to pass product details
+      const deliveryTime = session.metadata.delivery_time; // e.g., "5-7 business days"
+
+      // Send a confirmation email
+      await sendConfirmationEmail(customerEmail, productName, deliveryTime);
+    }
+
+    // Return a 200 response to acknowledge receipt of the event
+    res.status(200).json({ received: true });
+  } else {
+    res.setHeader('Allow', 'POST');
+    res.status(405).end('Method Not Allowed');
+  }
+}
+
+// Function to send the confirmation email
+async function sendConfirmationEmail(email, productName, deliveryTime) {
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: process.env.GMAIL_USER,
+      pass: process.env.GMAIL_PASS,
+    },
+  });
+
+  const mailOptions = {
+    from: `"Your Store" <${process.env.GMAIL_USER}>`,
+    to: email,
+    subject: 'Order Confirmation',
+    text: `Congratulations! You just purchased ${productName}. You will receive it within ${deliveryTime}.`,
+    html: `<p>Congratulations! You just purchased <strong>${productName}</strong>. You will receive it within <strong>${deliveryTime}</strong>.</p>`,
+  };
+
   try {
-    const rawBody = await request.text();
-    const sig = request.headers.get('stripe-signature');
-
-    if (!sig) {
-      console.error('Missing Stripe signature');
-      return new NextResponse('Missing Stripe signature', { status: 400 });
-    }
-
-    const event = stripe.webhooks.constructEvent(
-      rawBody,
-      sig,
-      process.env.STRIPE_WEBHOOK_SECRET
-    );
-
-    console.log(`Received event: ${event.type}`);
-
-    switch (event.type) {
-      case 'payment_intent.succeeded':
-        const paymentIntent = event.data.object;
-        console.log(`PaymentIntent ${paymentIntent.id} succeeded.`);
-        // TODO: Update your database to mark the payment as completed
-        break;
-
-      case 'payment_intent.canceled':
-        const canceledIntent = event.data.object;
-        console.log(`PaymentIntent ${canceledIntent.id} was canceled.`);
-        // TODO: Update your database to mark the payment as canceled
-        break;
-
-      // Handle other event types as needed
-
-      default:
-        console.log(`Unhandled event type: ${event.type}`);
-    }
-
-    return NextResponse.json({ received: true }, { status: 200 });
-  } catch (err) {
-    console.error('Webhook Error:', err.message);
-    return new NextResponse(`Webhook Error: ${err.message}`, { status: 400 });
+    const info = await transporter.sendMail(mailOptions);
+    console.log('Confirmation email sent:', info.response);
+  } catch (error) {
+    console.error('Error sending confirmation email:', error);
   }
 }
