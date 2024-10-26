@@ -120,6 +120,7 @@ export default async function handler(req, res) {
 
 // Function to send the confirmation email
 async function sendConfirmationEmail(email, productName, deliveryTime) {
+  console.log("Email sent confirmed!")
   const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
@@ -137,6 +138,7 @@ async function sendConfirmationEmail(email, productName, deliveryTime) {
   };
 
   try {
+    console.log('Sending confirmation email to:', email);
     const info = await transporter.sendMail(mailOptions);
     console.log('Confirmation email sent:', info.response);
   } catch (error) {
