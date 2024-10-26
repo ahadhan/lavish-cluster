@@ -155,7 +155,7 @@ export async function POST(request) {
       typeof session.payment_intent === 'string' ? session.payment_intent : session.payment_intent.id;
 
     // Step 2: Send a verification email to the user with Approve and Cancel links
-    await sendVerificationEmail(email, session.id);
+    await sendVerificationEmail(email, paymentIntentId);
     console.log('Verification email sent successfully.');
 
     return new NextResponse(JSON.stringify({ sessionId: session.id }), {
