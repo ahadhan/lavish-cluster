@@ -1,10 +1,7 @@
  // pages/success.js
 
-import { useRouter } from 'next/router';
-import { useEffect } from 'react';
-
 const SuccessPage = () => {
-  const router = useRouter();
+  // const router = useRouter();
   const { session_id } = router.query;
 
   useEffect(() => {
