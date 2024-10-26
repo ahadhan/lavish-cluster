@@ -83,6 +83,7 @@ import { buffer } from 'micro';
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 // Disable Next.js body parsing, as Stripe requires the raw body to verify webhook signatures
+export const runtime = 'nodejs'; // Add runtime declaration if needed
 export const config = {
   api: {
     bodyParser: false,
