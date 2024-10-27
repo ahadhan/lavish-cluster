@@ -73,15 +73,7 @@
 //   }
 // }
 
-res.set('Access-Control-Allow-Origin', '*');
-  
 
-  try {
-    event = stripe.webhooks.constructEvent(rawBody, sig, process.env.STRIPE_WEBHOOK_SECET);
-  } catch (err) {
-    console.log(⚠️  Webhook signature verification failed.);
-    return res.status(400).send(Webhook Error: ${err.message});
-  }
 
 
 
