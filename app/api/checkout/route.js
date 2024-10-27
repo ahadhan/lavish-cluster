@@ -1,4 +1,3 @@
-
 import Stripe from 'stripe';
 import { NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
@@ -35,7 +34,6 @@ export async function POST(request) {
       success_url: `${process.env.BASE_URL}/success`, // Placeholder URL
       cancel_url: `${process.env.BASE_URL}/cancel`,   // Placeholder URL
     });
-    
 
     console.log('Stripe session created:', session.id);
     return new NextResponse(JSON.stringify({ sessionId: session.id }), {

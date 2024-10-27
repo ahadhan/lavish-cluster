@@ -12,9 +12,13 @@ export async function POST(req) {
   const signature = req.headers['stripe-signature'];
   const payload = await req.text();
 
+  console.log("Payload called: ", payload )
+
+
   let event;
   try {
     event = stripe.webhooks.constructEvent(payload, signature, process.env.STRIPE_WEBHOOK_SECRET);
+    console.log("event:", event)
   } catch (err) {
     console.error('Webhook signature verification failed:', err.message);
     return new NextResponse(`Webhook Error: ${err.message}`, { status: 400 });
@@ -23,18 +27,18 @@ export async function POST(req) {
   // Handle specific webhook events
   if (event.type === 'checkout.session.completed') {
     console.log("Webhook triggered: checkout.session.completed");
-    return;
+    // return;
     const session = event.data.object;
     const email = session.customer_email;
     const productName = "XYZ Product";  // Placeholder product name
     const deliveryTime = "5-7 business days";
-
-    try {
-      await sendConfirmationEmail(email, productName, deliveryTime);
-      console.log('Confirmation email sent for session:', session.id);
-    } catch (error) {
-      console.error('Error sending confirmation email:', error);
-    }
+    console.log("session: ", session, email)
+  //   try {
+  //     await sendConfirmationEmail(email, productName, deliveryTime);
+  //     console.log('Confirmation email sent for session:', session.id);
+  //   } catch (error) {
+  //     console.error('Error sending confirmation email:', error);
+  //   }
   }
 
   return new NextResponse(JSON.stringify({ received: true }), { status: 200 });
