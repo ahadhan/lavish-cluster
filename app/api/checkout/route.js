@@ -32,10 +32,10 @@ export async function POST(request) {
       })),
       mode: 'payment',
       customer_email: email,
-      // Setting placeholder URLs for success and cancel, as they won't be used
-      // success_url: `https://lavish-cluster-btr83pgc4-ahadhans-projects.vercel.app/`,  // Placeholder URL
-      // cancel_url: `https://lavish-cluster-btr83pgc4-ahadhans-projects.vercel.app/`,    // Placeholder URL
+      success_url: `${process.env.BASE_URL}/placeholder-success`, // Placeholder URL
+      cancel_url: `${process.env.BASE_URL}/placeholder-cancel`,   // Placeholder URL
     });
+    
 
     console.log('Stripe session created:', session.id);
     return new NextResponse(JSON.stringify({ sessionId: session.id }), {
