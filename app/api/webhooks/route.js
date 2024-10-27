@@ -73,11 +73,22 @@
 //   }
 // }
 
+res.set('Access-Control-Allow-Origin', '*');
+  
+
+  try {
+    event = stripe.webhooks.constructEvent(rawBody, sig, process.env.STRIPE_WEBHOOK_SECET);
+  } catch (err) {
+    console.log(⚠️  Webhook signature verification failed.);
+    return res.status(400).send(Webhook Error: ${err.message});
+  }
+
 
 
 import Stripe from 'stripe';
 import nodemailer from 'nodemailer';
 import { NextResponse } from 'next/server';
+
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
 // Specify the runtime and dynamic behavior as per Next.js 13+ standards
@@ -86,19 +97,19 @@ export const dynamic = 'force-dynamic'; // Required for dynamic behavior if your
 
 export async function POST(req) {
   // Access the stripe-signature header correctly
-  const signature = req.headers.get('stripe-signature');
-  const payload = await req.text();
+
+  const rawBody = req.rawBody;
+  const sig = req.headers['stripe-signature'];
+  // let event;
+
+  // const signature = req.headers.get('stripe-signature');
+  // const payload = await req.text();
 
   console.log("Payload received: ", payload);
 
   let event;
   try {
-    event = stripe.webhooks.constructEvent(
-      payload,
-      signature,
-      process.env.STRIPE_WEBHOOK_SECRET
-    );
-    console.log("Event constructed:", event);
+    event = stripe.webhooks.constructEvent(rawBody, sig, process.env.STRIPE_WEBHOOK_SECRET);
   } catch (err) {
     console.error('Webhook signature verification failed:', err.message);
     return new NextResponse(`Webhook Error: ${err.message}`, { status: 400 });
