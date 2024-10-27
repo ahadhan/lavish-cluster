@@ -22,7 +22,8 @@ export async function POST(req) {
 
   // Handle specific webhook events
   if (event.type === 'checkout.session.completed') {
-    console.log("Webhook 'checkout.session.completed' triggered.");
+    console.log("Webhook triggered: checkout.session.completed");
+    return;
     const session = event.data.object;
     const email = session.customer_email;
     const productName = "XYZ Product";  // Placeholder product name

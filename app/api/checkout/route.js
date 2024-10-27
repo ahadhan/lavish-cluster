@@ -32,8 +32,8 @@ export async function POST(request) {
       })),
       mode: 'payment',
       customer_email: email,
-      success_url: `${process.env.BASE_URL}/`, // Placeholder URL
-      cancel_url: `${process.env.BASE_URL}/`,   // Placeholder URL
+      success_url: `${process.env.BASE_URL}/success`, // Placeholder URL
+      cancel_url: `${process.env.BASE_URL}/cancel`,   // Placeholder URL
     });
     
 
