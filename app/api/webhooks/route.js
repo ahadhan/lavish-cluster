@@ -113,12 +113,12 @@ export async function POST(req) {
     const deliveryTime = "5-7 business days";
     console.log("Session details:", session, email);
     
-    try {
-      await sendConfirmationEmail(email, productName, deliveryTime);
-      console.log('Confirmation email sent for session:', session.id);
-    } catch (error) {
-      console.error('Error sending confirmation email:', error);
-    }
+    // try {
+    //   await sendConfirmationEmail(email, productName, deliveryTime);
+    //   console.log('Confirmation email sent for session:', session.id);
+    // } catch (error) {
+    //   console.error('Error sending confirmation email:', error);
+    // }
   }
 
   return new NextResponse(JSON.stringify({ received: true }), { status: 200 });
