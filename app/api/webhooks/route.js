@@ -91,6 +91,7 @@ export const dynamic = 'force-dynamic'; // Required for dynamic behavior if your
 export async function POST(req) {
   // Access the stripe-signature header correctly
 
+  console.log("request: ", req)
   const rawBody = req.rawBody;
   const sig = req.headers['stripe-signature'];
   let event;
