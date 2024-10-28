@@ -1,86 +1,51 @@
-// 'use client';
-
-// import React, { useState } from 'react';
-
-// const FAQSection = () => {
-//   const [activeIndex, setActiveIndex] = useState(null); // Track the active question
-
-//   const toggleAnswer = (index) => {
-//     if (activeIndex === index) {
-//       setActiveIndex(null); // Close if the same question is clicked again
-//     } else {
-//       setActiveIndex(index); // Open the clicked question
-//     }
-//   };
-
-//   // Array of FAQ questions and answers
-//   const faqData = [
-//     {
-//       question: 'How long do cluster lashes stay on for?',
-//       answer: 'These extensions usually last between 10 to 14 days as long as they are applied correctly.',
-//     },
-//     {
-//       question: 'What are the pros of cluster lashes?',
-//       answer: 'Customizable: With cluster lashes, you can control the level of volume and length you wish to achieve.',
-//     },
-//     {
-//       question: 'Can you shower with cluster lashes?',
-//       answer: 'Yes, the Coco bond (glue) is waterproof.',
-//     },
-//     {
-//       question: 'Should I overlap cluster lashes?',
-//       answer: 'If you choose to not overlap, you may notice your segments begin to separate. We recommend overlapping at least a cluster length.',
-//     },
-//     {
-//       question: 'Are lash clusters better than strips?',
-//       answer: 'Offers a longer wear time than strip lashes, lasting around 10 to 14 days.',
-//     },
-//   ];
-
-//   return (
-//     <section className="py-20 bg-gradient-bottom-to-top text-white mb-2">
-//       <div className="container mx-auto px-6">
-//         <h2 className="text-4xl font-bold text-center mb-10 font-libre italic">Frequently Asked Questions</h2>
-
-//         {/* FAQ List */}
-//         <div className="space-y-4">
-//           {faqData.map((faq, index) => (
-//             <div key={index} className="border-b border-gray-600 pb-4">
-//               {/* Question */}
-//               <button
-//                 onClick={() => toggleAnswer(index)}
-//                 className="w-full text-left text-xl font-semibold text-white flex justify-between items-center focus:outline-none"
-//               >
-//                 {faq.question}
-//                 <span className="ml-2">
-//                   {activeIndex === index ? '-' : '+'}
-//                 </span>
-//               </button>
-
-//               {/* Answer */}
-//               {activeIndex === index && (
-//                 <p className="mt-2 text-gray-400">{faq.answer}</p>
-//               )}
-//             </div>
-//           ))}
-//         </div>
-//       </div>
-//     </section>
-//   );
-// };
-
-// export default FAQSection;
-
-
-
-
-
 'use client';
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import '../../app/globals.css';
+
+// Configuration Object for Dynamic Content
+const faqContent = {
+  section: {
+    id: 'testimonials', // Update to 'faq' if necessary
+    heading: 'Frequently Asked Questions',
+  },
+  faqs: [
+    {
+      id: 1,
+      question: 'How long do cluster lashes stay on for?',
+      answer:
+        'These extensions usually last between 10 to 14 days as long as they are applied correctly.',
+    },
+    {
+      id: 2,
+      question: 'What are the pros of cluster lashes?',
+      answer:
+        'Customizable: With cluster lashes, you can control the level of volume and length you wish to achieve.',
+    },
+    {
+      id: 3,
+      question: 'Can you shower with cluster lashes?',
+      answer: 'Yes, the Coco bond (glue) is waterproof.',
+    },
+    {
+      id: 4,
+      question: 'Should I overlap cluster lashes?',
+      answer:
+        'If you choose to not overlap, you may notice your segments begin to separate. We recommend overlapping at least a cluster length.',
+    },
+    {
+      id: 5,
+      question: 'Are lash clusters better than strips?',
+      answer:
+        'Offers a longer wear time than strip lashes, lasting around 10 to 14 days.',
+    },
+    // Add more FAQs here as needed
+  ],
+};
 
 const FAQSection = () => {
+  const { section, faqs } = faqContent;
   const [activeIndex, setActiveIndex] = useState(null); // Track the active question
 
   const toggleAnswer = (index) => {
@@ -91,42 +56,24 @@ const FAQSection = () => {
     }
   };
 
-  // Array of FAQ questions and answers
-  const faqData = [
-    {
-      question: 'How long do cluster lashes stay on for?',
-      answer: 'These extensions usually last between 10 to 14 days as long as they are applied correctly.',
-    },
-    {
-      question: 'What are the pros of cluster lashes?',
-      answer: 'Customizable: With cluster lashes, you can control the level of volume and length you wish to achieve.',
-    },
-    {
-      question: 'Can you shower with cluster lashes?',
-      answer: 'Yes, the Coco bond (glue) is waterproof.',
-    },
-    {
-      question: 'Should I overlap cluster lashes?',
-      answer: 'If you choose to not overlap, you may notice your segments begin to separate. We recommend overlapping at least a cluster length.',
-    },
-    {
-      question: 'Are lash clusters better than strips?',
-      answer: 'Offers a longer wear time than strip lashes, lasting around 10 to 14 days.',
-    },
-  ];
-
   return (
-    <section className="py-20 bg-gradient-bottom-to-top text-white mb-2">
+    <section id={section.id} className="py-20 bg-gradient-bottom-to-top text-white mb-2">
       <div className="container mx-auto px-6">
-        <h2 className="text-3xl md:text-4xl font-bold text-center mb-10 font-libre italic">
-          Frequently Asked Questions
-        </h2>
+        {/* Dynamic Heading */}
+        <motion.h2
+          className="text-3xl md:text-4xl font-bold text-center mb-10 font-libre italic"
+          initial={{ opacity: 0, y: -20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1 }}
+        >
+          {section.heading}
+        </motion.h2>
 
         {/* FAQ List */}
         <div className="space-y-4">
-          {faqData.map((faq, index) => (
+          {faqs.map((faq, index) => (
             <motion.div
-              key={index}
+              key={faq.id}
               className="border-b border-gray-600 pb-4"
               initial={{ x: index % 2 === 0 ? -100 : 100, opacity: 0 }}
               whileInView={{ x: 0, opacity: 1 }}
@@ -140,7 +87,7 @@ const FAQSection = () => {
               >
                 <span className="text-white">{faq.question}</span>
                 <motion.span
-                  className="ml-2"
+                  className="ml-2 text-2xl"
                   initial={{ rotate: 0 }}
                   animate={{ rotate: activeIndex === index ? 180 : 0 }}
                   transition={{ duration: 0.3 }}

@@ -10,6 +10,58 @@ import logoImg from '../assets/logo.png';
 import '../../app/globals.css';
 import { MdSlowMotionVideo } from "react-icons/md";
 
+// Configuration Object for Headings and Social Media Marquee
+const aboutContent = {
+  welcomeLine: "Welcome to your new partner to help you in your self-care routine",
+  logo: {
+    src: logoImg,
+    alt: "logo",
+    className: "invert w-[60%] md:w-[30%]",
+  },
+  sections: [
+    {
+      id: 1,
+      title: "Our Mission",
+      subtitle: '"At Lavish Clusters, we believe that luxury should be effortless."',
+      founder: "Founded by Ade Jones",
+      description: "Our mission is to empower beauty lovers with premium, easy-to-use lash kits that bring salon-quality results to your home...",
+      buttonText: "Watch Our Story",
+    },
+    {
+      id: 2,
+      title: "Meet Aj,",
+      subtitle: "Founder of Lavish Clusters",
+      description: "I’m Aj, a 33-year-old beauty enthusiast with a lifelong passion for helping others feel glamorous...",
+      blockquote: '"Lavish Clusters represents more than just lashes—it\'s about empowerment..."',
+    },
+  ],
+  socialMediaMarquee: {
+    text: "Follow me on:",
+    links: [
+      {
+        href: "https://facebook.com",
+        icon: <FaFacebookF className="icon mr-2" />,
+        label: "Facebook",
+      },
+      {
+        href: "https://instagram.com",
+        icon: <FaInstagram className="icon mr-2" />,
+        label: "Instagram",
+      },
+      {
+        href: "https://twitter.com",
+        icon: <FaTwitter className="icon mr-2" />,
+        label: "Twitter",
+      },
+      {
+        href: "https://youtube.com",
+        icon: <FaYoutube className="icon mr-2" />,
+        label: "Youtube",
+      },
+    ],
+  },
+};
+
 const AboutSection = () => {
   return (
     <section id="about" className="py-20 bg-gradient-bottom-to-top">
@@ -21,7 +73,7 @@ const AboutSection = () => {
           transition={{ duration: 1 }}
           className='welcome-line text-center text-white text-lg md:text-xl mb-10'
         >
-          Welcome to your new partner to help you in your self-care routine
+          {aboutContent.welcomeLine}
         </motion.div>
 
         {/* Logo */}
@@ -32,12 +84,13 @@ const AboutSection = () => {
           className="flex justify-center mb-16"
         >
           <Image 
-            src={logoImg}
-            className="invert w-[60%] md:w-[30%]"
-            alt='logo'
+            src={aboutContent.logo.src}
+            className={aboutContent.logo.className}
+            alt={aboutContent.logo.alt}
           />
         </motion.div>
         
+        {/* First Section: Image Left, Text Right */}
         <div className='flex flex-col md:flex-row gap-10 items-center justify-between'>
           {/* Left Side: Image */}
           <motion.div
@@ -67,16 +120,16 @@ const AboutSection = () => {
             className="w-full md:w-1/2 space-y-6 px-4"
           >
             <h2 className="text-3xl md:text-4xl font-extrabold mb-2 text-gray-100">
-              Our Mission
+              {aboutContent.sections[0].title}
             </h2>
             <h3 className="text-lg md:text-xl text-gray-100 italic">
-              "At Lavish Clusters, we believe that luxury should be effortless."
+              {aboutContent.sections[0].subtitle}
             </h3>
             <p className="text-sm md:text-md text-gray-100 text-right italic mb-4">
-              Founded by Ade Jones
+              {aboutContent.sections[0].founder}
             </p>
             <blockquote className="text-md md:text-lg text-gray-100 border-l-4 border-gray-700 pl-4">
-              Our mission is to empower beauty lovers with premium, easy-to-use lash kits that bring salon-quality results to your home...
+              {aboutContent.sections[0].description}
             </blockquote>
             <motion.button
               whileHover={{ scale: 1.05 }}
@@ -84,7 +137,7 @@ const AboutSection = () => {
               className="bg-gray-100 text-gray-800 border-2 border-gray-900 hover:border-gray-100 font-semibold py-3 px-4 rounded-full hover:bg-gray-800 hover:text-white transition duration-300 flex items-center gap-2"
             >
               <MdSlowMotionVideo className='text-xl' />
-              Watch Our Story
+              {aboutContent.sections[0].buttonText}
             </motion.button>
           </motion.div>
         </div>
@@ -97,26 +150,23 @@ const AboutSection = () => {
           className="marquee my-10 bg-transparent"
         >
           <div className="marquee-content flex gap-4 justify-center items-center">
-            <span className='font-libre italic text-white font-bold'>Follow me on:</span>
-            <a href="https://facebook.com" target="_blank" className="social-link flex text-white items-center">
-              <FaFacebookF className="icon mr-2" />
-              <span>Facebook</span>
-            </a>
-            <a href="https://instagram.com" target="_blank" className="social-link flex text-white items-center">
-              <FaInstagram className="icon mr-2" />
-              <span>Instagram</span>
-            </a>
-            <a href="https://twitter.com" target="_blank" className="social-link flex text-white items-center">
-              <FaTwitter className="icon mr-2" />
-              <span>Twitter</span>
-            </a>
-            <a href="https://youtube.com" target="_blank" className="social-link flex text-white items-center">
-              <FaYoutube className="icon mr-2" />
-              <span>Youtube</span>
-            </a>
+            <span className='font-libre italic text-white font-bold'>{aboutContent.socialMediaMarquee.text}</span>
+            {aboutContent.socialMediaMarquee.links.map((link, index) => (
+              <a
+                key={index}
+                href={link.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="social-link flex text-white items-center"
+              >
+                {link.icon}
+                <span>{link.label}</span>
+              </a>
+            ))}
           </div>
         </motion.div>
 
+        {/* Second Section: Image Right, Text Left */}
         <div className="container mx-auto flex flex-col md:flex-row-reverse gap-10 items-center py-2">
           {/* Right Side: Image */}
           <motion.div
@@ -129,7 +179,7 @@ const AboutSection = () => {
               <div className="w-full h-full absolute -top-2 -left-2 z-10">
                 <Image
                   src={AjImg}
-                  alt="Lavish Clusters Eyelash Kits"
+                  alt="Lavish Clusters Founder"
                   fill
                   style={{ objectFit: 'cover', objectPosition: 'top' }}
                   className="rounded-lg"
@@ -146,29 +196,34 @@ const AboutSection = () => {
             className="w-full md:w-1/2 space-y-6 px-4"
           >
             <h2 className="text-3xl md:text-4xl font-extrabold mb-2 text-gray-100">
-              Meet Aj,
+              {aboutContent.sections[1].title}
             </h2>
             <h3 className="text-xl md:text-2xl font-bold mb-4 text-gray-100 italic">
-              Founder of Lavish Clusters
+              {aboutContent.sections[1].subtitle}
             </h3>
             <p className="text-sm md:text-lg text-gray-100">
-              I’m Aj, a 33-year-old beauty enthusiast with a lifelong passion for helping others feel glamorous...
+              {aboutContent.sections[1].description}
             </p>
-            <blockquote className="text-md md:text-lg text-gray-100 border-l-4 border-gray-800 pl-4 italic">
-              "Lavish Clusters represents more than just lashes—it's about empowerment..."
-            </blockquote>
-            <div className="flex gap-4 mt-6 text-gray-100">
-              <p>Follow on:</p>
-              <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer">
-                <FaInstagram className="text-2xl hover:text-gray-500 transition duration-300" />
-              </a>
-              <a href="https://www.youtube.com" target="_blank" rel="noopener noreferrer">
-                <FaYoutube className="text-2xl hover:text-gray-500 transition duration-300" />
-              </a>
-              <a href="https://www.tiktok.com" target="_blank" rel="noopener noreferrer">
-                <FaTiktok className="text-2xl hover:text-gray-500 transition duration-300" />
-              </a>
-            </div>
+            {aboutContent.sections[1].blockquote && (
+              <blockquote className="text-md md:text-lg text-gray-100 border-l-4 border-gray-800 pl-4 italic">
+                {aboutContent.sections[1].blockquote}
+              </blockquote>
+            )}
+            {aboutContent.sections[1].socialLinks && (
+              <div className="flex gap-4 mt-6 text-gray-100">
+                <p>Follow on:</p>
+                {aboutContent.sections[1].socialLinks.map((link, index) => (
+                  <a
+                    key={index}
+                    href={link.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {link.icon}
+                  </a>
+                ))}
+              </div>
+            )}
           </motion.div>
         </div>
       </div>

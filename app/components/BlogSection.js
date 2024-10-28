@@ -6,11 +6,8 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { FaChevronRight, FaInstagram, FaYoutube, FaTiktok, FaStar, FaBars, FaTimes } from 'react-icons/fa'
 import { motion } from 'framer-motion'
-import hero from '../assets/hero.webp'
 import p1 from '../assets/p1.webp'
-import p2 from '../assets/p2.webp'
-import p3 from '../assets/p3.webp'
-import p4 from '../assets/p4.webp'
+
 import '../../app/globals.css'
 
 const BlogSection = () => {
