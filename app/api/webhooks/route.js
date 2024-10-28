@@ -81,31 +81,26 @@ import Stripe from 'stripe';
 import nodemailer from 'nodemailer';
 import { NextResponse } from 'next/server';
 
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
 // Specify the runtime and dynamic behavior as per Next.js 13+ standards
 export const runtime = 'nodejs'; // Specify that this API route should run on the Node.js runtime
 export const dynamic = 'force-dynamic'; // Required for dynamic behavior if your route needs to respond to runtime changes
 
-
 export async function POST(req) {
-  // Access the stripe-signature header correctly
+  // Log the incoming request for debugging purposes
+  console.log("Incoming request:", req);
 
-  console.log("request: ", req)
   const rawBody = req.rawBody;
   const sig = req.headers['stripe-signature'];
   let event;
 
-  console.log(rawBody, sig);
-  // let event;
-
-  // const signature = req.headers.get('stripe-signature');
-  // const payload = await req.text();
-
-  // console.log("Payload received: ", payload);
+  console.log("Raw Body:", rawBody);
+  console.log("Stripe Signature:", sig);
 
   try {
     event = stripe.webhooks.constructEvent(rawBody, sig, process.env.STRIPE_WEBHOOK_SECRET);
+    console.log("Stripe event constructed successfully:", event.type);
   } catch (err) {
     console.error('Webhook signature verification failed:', err.message);
     return new NextResponse(`Webhook Error: ${err.message}`, { status: 400 });
@@ -118,11 +113,16 @@ export async function POST(req) {
     const email = session.customer_email;
     const productName = "XYZ Product";  // Placeholder product name
     const deliveryTime = "5-7 business days";
+    
     console.log("Session details:", session, email);
     
     try {
       await sendConfirmationEmail(email, productName, deliveryTime);
       console.log('Confirmation email sent for session:', session.id);
+      
+      // **New Console Log for Payment Completion**
+      console.log(`Payment completed successfully for session ID: ${session.id}`);
+      
     } catch (error) {
       console.error('Error sending confirmation email:', error);
     }
