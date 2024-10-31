@@ -81,12 +81,12 @@ body, html {
 
 /* Gradient from top to bottom */
 .bg-gradient-top-to-bottom {
-  background: linear-gradient(to bottom, #000000, #0a0f1a);
+  background: linear-gradient(to bottom, #000000, #010203);
 }
 
 /* Gradient from bottom to top */
 .bg-gradient-bottom-to-top {
-  background: linear-gradient(to top, #000000, #0a0f1a);
+  background: linear-gradient(to top, #000000, #010203);
 }
 
 

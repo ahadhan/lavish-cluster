@@ -1,5 +1,18 @@
 import localFont from "next/font/local";
 import "./globals.css";
+import { Roboto, Playfair_Display } from 'next/font/google'
+
+const roboto = Roboto({
+  weight: ['400', '500', '700'],
+  subsets: ['latin'],
+  variable: '--font-roboto',
+});
+
+const playfairDisplay = Playfair_Display({
+  weight: ['400', '700'],
+  subsets: ['latin'],
+  variable: '--font-playfair',
+});
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",

@@ -15,8 +15,8 @@ module.exports = {
         skinColor: "#EFDBA6",
       },
       fontFamily: {
-        poppins: ['"Poppins"', 'sans-serif'],
-        libre: ['"Libre Baskerville"', 'serif'],
+        poppins: ['var(--font-roboto)', 'sans-serif'],
+        libre: ['var(--font-playfair)', 'serif'],
       },
       textShadow: {
         'light-white': '1px 1px 2px rgba(255, 255, 255, 0.6)', // Softer, lighter white shadow

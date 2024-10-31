@@ -82,7 +82,7 @@ import nodemailer from 'nodemailer';
 import { NextResponse } from 'next/server';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-  apiVersion: "2024-09-30",
+  apiVersion: "2024-06-20",
 });
 
 // Specify the runtime and dynamic behavior as per Next.js 13+ standards
@@ -93,7 +93,7 @@ export async function POST(req) {
   // Log the incoming request for debugging purposes
   console.log("Incoming request:", req);
 
-  const rawBody = req.rawBody;
+  const payload = req.text();
   const sig = req.headers['stripe-signature'];
   let event;
 
@@ -101,16 +101,17 @@ export async function POST(req) {
   console.log("Stripe Signature:", sig);
 
   try {
-    event = stripe.webhooks.constructEvent(rawBody, sig, process.env.STRIPE_WEBHOOK_SECRET);
+    event = stripe.webhooks.constructEvent(payload, sig, process.env.STRIPE_WEBHOOK_SECRET);
     console.log("Stripe event constructed successfully:", event.type);
+    // return NextResponse.json({Status: "success", event: event.type})
   } catch (err) {
     console.error('Webhook signature verification failed:', err.message);
     return new NextResponse(`Webhook Error: ${err.message}`, { status: 400 });
   }
 
   // Handle specific webhook events
-  if (event.type === 'checkout.session.completed') {
-    console.log("Webhook triggered: checkout.session.completed");
+  if (event.type === 'payment.intent.succeeded') {
+    console.log("Webhook triggered: payment intent succeeded");
     const session = event.data.object;
     const email = session.customer_email;
     const productName = "XYZ Product";  // Placeholder product name
