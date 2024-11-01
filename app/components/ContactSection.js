@@ -34,7 +34,7 @@
 //                 <input
 //                   type="text"
 //                   id="name"
-//                   className="w-full px-4 py-2 rounded bg-gray-600 text-white focus:outline-none focus:ring-2 focus:ring-gray-600"
+//                   className="w-full px-4 py-2 rounded bg-white text-white focus:outline-none focus:ring-2 focus:ring-white"
 //                   placeholder="Your Name"
 //                 />
 //               </div>
@@ -45,7 +45,7 @@
 //                 <input
 //                   type="email"
 //                   id="email"
-//                   className="w-full px-4 py-2 rounded bg-gray-600 text-white focus:outline-none focus:ring-2 focus:ring-gray-600"
+//                   className="w-full px-4 py-2 rounded bg-white text-white focus:outline-none focus:ring-2 focus:ring-white"
 //                   placeholder="your@email.com"
 //                 />
 //               </div>
@@ -56,7 +56,7 @@
 //                 <textarea
 //                   id="message"
 //                   rows={4}
-//                   className="w-full px-4 py-2 rounded bg-gray-600 text-white focus:outline-none focus:ring-2 focus:ring-gray-600"
+//                   className="w-full px-4 py-2 rounded bg-white text-white focus:outline-none focus:ring-2 focus:ring-white"
 //                   placeholder="Your message..."
 //                 ></textarea>
 //               </div>
@@ -64,7 +64,7 @@
 //                 whileHover={{ scale: 1.05 }}
 //                 whileTap={{ scale: 0.95 }}
 //                 type="submit"
-//                 className="bg-white text-gray-900 font-bold py-2 px-6 rounded hover:bg-gray-100 transition duration-200"
+//                 className="bg-white text-black font-bold py-2 px-6 rounded hover:bg-gray-100 transition duration-200"
 //               >
 //                 Send Message
 //               </motion.button>
@@ -84,7 +84,7 @@
 //                 href="https://instagram.com/lavishclusters"
 //                 target="_blank"
 //                 rel="noopener noreferrer"
-//                 className="bg-white text-gray-900 p-4 rounded-full hover:bg-gray-100 transition transform duration-200"
+//                 className="bg-white text-black p-4 rounded-full hover:bg-gray-100 transition transform duration-200"
 //                 whileHover={{ scale: 1.1, rotate: 5 }}
 //               >
 //                 <FaInstagram size={24} />
@@ -93,7 +93,7 @@
 //                 href="https://youtube.com/lavishclusters"
 //                 target="_blank"
 //                 rel="noopener noreferrer"
-//                 className="bg-white text-gray-900 p-4 rounded-full hover:bg-gray-100 transition transform duration-200"
+//                 className="bg-white text-black p-4 rounded-full hover:bg-gray-100 transition transform duration-200"
 //                 whileHover={{ scale: 1.1, rotate: -5 }}
 //               >
 //                 <FaYoutube size={24} />
@@ -102,7 +102,7 @@
 //                 href="https://tiktok.com/@lavishclusters"
 //                 target="_blank"
 //                 rel="noopener noreferrer"
-//                 className="bg-white text-gray-900 p-4 rounded-full hover:bg-gray-100 transition transform duration-200"
+//                 className="bg-white text-black p-4 rounded-full hover:bg-gray-100 transition transform duration-200"
 //                 whileHover={{ scale: 1.1, rotate: 5 }}
 //               >
 //                 <FaTiktok size={24} />
@@ -112,14 +112,14 @@
 //             <form className="flex">
 //               <input
 //                 type="email"
-//                 className="flex-grow px-4 py-2 rounded-l bg-gray-600 text-white focus:outline-none focus:ring-2 focus:ring-gray-600"
+//                 className="flex-grow px-4 py-2 rounded-l bg-white text-white focus:outline-none focus:ring-2 focus:ring-white"
 //                 placeholder="your@email.com"
 //               />
 //               <motion.button
 //                 whileHover={{ scale: 1.05 }}
 //                 whileTap={{ scale: 0.95 }}
 //                 type="submit"
-//                 className="bg-white text-gray-900 font-bold py-2 px-6 rounded-r hover:bg-gray-100 transition duration-200"
+//                 className="bg-white text-black font-bold py-2 px-6 rounded-r hover:bg-gray-100 transition duration-200"
 //               >
 //                 Subscribe
 //               </motion.button>
@@ -222,7 +222,7 @@ const ContactSection = () => {
                 <input
                   type="text"
                   id="name"
-                  className="w-full px-4 py-2 rounded bg-gray-600 text-white focus:outline-none focus:ring-2 focus:ring-gray-600"
+                  className="w-full px-4 py-2 rounded bg-white text-white focus:outline-none focus:ring-2 focus:ring-white"
                   placeholder={form.name.placeholder}
                 />
               </div>
@@ -235,7 +235,7 @@ const ContactSection = () => {
                 <input
                   type="email"
                   id="email"
-                  className="w-full px-4 py-2 rounded bg-gray-600 text-white focus:outline-none focus:ring-2 focus:ring-gray-600"
+                  className="w-full px-4 py-2 rounded bg-white text-white focus:outline-none focus:ring-2 focus:ring-white"
                   placeholder={form.email.placeholder}
                 />
               </div>
@@ -248,7 +248,7 @@ const ContactSection = () => {
                 <textarea
                   id="message"
                   rows={4}
-                  className="w-full px-4 py-2 rounded bg-gray-600 text-white focus:outline-none focus:ring-2 focus:ring-gray-600"
+                  className="w-full px-4 py-2 rounded bg-white text-white focus:outline-none focus:ring-2 focus:ring-white"
                   placeholder={form.message.placeholder}
                 ></textarea>
               </div>
@@ -258,7 +258,7 @@ const ContactSection = () => {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 type="submit"
-                className="bg-white text-gray-900 font-bold py-2 px-6 rounded hover:bg-gray-100 transition duration-200 w-full sm:w-auto"
+                className="bg-white text-black font-bold py-2 px-6 rounded hover:bg-gray-100 transition duration-200 w-full sm:w-auto"
               >
                 {form.submitButton.text}
               </motion.button>
@@ -281,7 +281,7 @@ const ContactSection = () => {
                   href={social.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="bg-white text-gray-900 p-4 rounded-full hover:bg-gray-100 transition transform duration-200"
+                  className="bg-white text-black p-4 rounded-full hover:bg-gray-100 transition transform duration-200"
                   whileHover={{ scale: 1.1, rotate: 5 }}
                 >
                   {social.icon}
@@ -294,14 +294,14 @@ const ContactSection = () => {
             <form className="flex flex-col sm:flex-row">
               <input
                 type="email"
-                className="flex-grow px-4 py-2 rounded-t sm:rounded-l sm:rounded-r-none bg-gray-600 text-white focus:outline-none focus:ring-2 focus:ring-gray-600"
+                className="flex-grow px-4 py-2 rounded-t sm:rounded-l sm:rounded-r-none bg-white text-white focus:outline-none focus:ring-2 focus:ring-white"
                 placeholder={subscribe.placeholder}
               />
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 type="submit"
-                className="bg-white text-gray-900 font-bold py-2 px-6 rounded-b sm:rounded-r hover:bg-gray-100 transition duration-200 mt-2 sm:mt-0"
+                className="bg-white text-black font-bold py-2 px-6 rounded-b sm:rounded-r hover:bg-gray-100 transition duration-200 mt-2 sm:mt-0"
               >
                 {subscribe.buttonText}
               </motion.button>
