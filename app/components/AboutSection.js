@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { FaFacebookF, FaInstagram, FaTwitter, FaYoutube, FaTiktok } from 'react-icons/fa';
@@ -9,60 +9,39 @@ import AjImg from '../assets/Aj.webp';
 import logoImg from '../assets/logo.png';
 import '../../app/globals.css';
 import { MdSlowMotionVideo } from "react-icons/md";
-
-// Configuration Object for Headings and Social Media Marquee
-const aboutContent = {
-  welcomeLine: "Welcome to your new partner to help you in your self-care routine",
-  logo: {
-    src: logoImg,
-    alt: "logo",
-    className: "invert w-[60%] md:w-[30%]",
-  },
-  sections: [
-    {
-      id: 1,
-      title: "Our Mission",
-      subtitle: '"At Lavish Clusters, we believe that luxury should be effortless."',
-      founder: "Founded by Ade Jones",
-      description: "Our mission is to empower beauty lovers with premium, easy-to-use lash kits that bring salon-quality results to your home...",
-      buttonText: "Watch Our Story",
-    },
-    {
-      id: 2,
-      title: "Meet Aj,",
-      subtitle: "Founder of Lavish Clusters",
-      description: "I’m Aj, a 33-year-old beauty enthusiast with a lifelong passion for helping others feel glamorous...",
-      blockquote: '"Lavish Clusters represents more than just lashes—it\'s about empowerment..."',
-    },
-  ],
-  socialMediaMarquee: {
-    text: "Follow me on:",
-    links: [
-      {
-        href: "https://facebook.com",
-        icon: <FaFacebookF className="icon mr-2" />,
-        label: "Facebook",
-      },
-      {
-        href: "https://instagram.com",
-        icon: <FaInstagram className="icon mr-2" />,
-        label: "Instagram",
-      },
-      {
-        href: "https://twitter.com",
-        icon: <FaTwitter className="icon mr-2" />,
-        label: "Twitter",
-      },
-      {
-        href: "https://youtube.com",
-        icon: <FaYoutube className="icon mr-2" />,
-        label: "Youtube",
-      },
-    ],
-  },
-};
+import { db } from "../lib/firebase"; // Import the Firebase setup
+import { doc, getDoc } from "firebase/firestore";
 
 const AboutSection = () => {
+  // Configuration Object for Headings and Social Media Marquee
+  const [aboutContent, setAboutContent] = useState(null);
+
+  useEffect(() => {
+    const fetchAboutContent = async () => {
+      console.log("Fetching about content..."); // Check if useEffect is being triggered
+      try {
+        // Reference to the aboutSection document
+        const docRef = doc(db, "content", "aboutSection");
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+          // Set state with the fetched data
+          console.log("Fetched data:", docSnap.data());
+          setAboutContent(docSnap.data());
+        } else {
+          console.log("No such document!");
+        }
+      } catch (error) {
+        console.error("Error fetching document: ", error);
+      }
+    };
+
+    fetchAboutContent();
+  }, []);
+
+  if (!aboutContent) return <div>Loading...</div>;
+
+
   return (
     <section id="about" className="py-20 bg-gradient-bottom-to-top">
       <div className="container mx-auto px-4">
@@ -83,13 +62,15 @@ const AboutSection = () => {
           transition={{ duration: 1, delay: 0.2 }}
           className="flex justify-center mb-16"
         >
-          <Image 
+          {/* <Image
             src={aboutContent.logo.src}
             className={aboutContent.logo.className}
             alt={aboutContent.logo.alt}
-          />
+            layout="fill" // Optional: Adjust according to your design
+            sizes="(max-width: 768px) 100vw, 50vw"
+          /> */}
         </motion.div>
-        
+
         {/* First Section: Image Left, Text Right */}
         <div className='flex flex-col md:flex-row gap-10 items-center justify-between'>
           {/* Left Side: Image */}

@@ -86,16 +86,16 @@ export default function Sidebar({ onSectionChange }) {
           {openDropdown === 1 && (
             <div className="pl-4 space-y-1">
               <Link
-                href="/admin/dashboard/content/hero"
+                href="/admin/dashboard/"
                 className="block py-1 px-2 hover:bg-gray-700 rounded"
                 onClick={() => handleSectionChange("Hero Section")}
               >
                 Hero
               </Link>
               <Link
-                href="/admin/dashboard/content/about"
+                href="/admin/dashboard/"
                 className="block py-1 px-2 hover:bg-gray-700 rounded"
-                onClick={() => handleSectionChange("AboutSection")}
+                onClick={() => handleSectionChange("About Section")}
               >
                 About
               </Link>

@@ -8,6 +8,7 @@ import CreateProduct from "../dashboard/component/CreateProduct";
 import Sidebar from "../dashboard/component/Sidebar";
 import Header from "../dashboard/component/Header";
 import AboutSection from "../dashboard/component/AboutContent";
+import HeroData from "./component/HeroData";
 
 export default function DashboardLayout({ children }) {
   const [currentSection, setCurrentSection] = useState("Dashboard");
@@ -69,6 +70,8 @@ export default function DashboardLayout({ children }) {
         return <CreateProduct />;
       case "About Section":
         return <AboutSection />;
+      case "Hero Section":
+        return <HeroData />
       default:
         return <MainContent />;
     }
