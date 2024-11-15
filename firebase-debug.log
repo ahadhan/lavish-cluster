@@ -1,0 +1,62 @@
+[debug] [2024-11-12T17:37:41.827Z] ----------------------------------------------------------------------
+[debug] [2024-11-12T17:37:41.832Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\la\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js init
+[debug] [2024-11-12T17:37:41.833Z] CLI Version:   13.24.2
+[debug] [2024-11-12T17:37:41.833Z] Platform:      win32
+[debug] [2024-11-12T17:37:41.834Z] Node Version:  v20.18.0
+[debug] [2024-11-12T17:37:41.834Z] Time:          Tue Nov 12 2024 22:37:41 GMT+0500 (Pakistan Standard Time)
+[debug] [2024-11-12T17:37:41.834Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2024-11-12T17:37:41.844Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2024-11-12T17:37:41.845Z] > authorizing via signed-in user (astrocallblog@gmail.com)
+[info] 
+     ######## #### ########  ######## ########     ###     ######  ########
+     ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##
+     ######    ##  ########  ######   ########  #########  ######  ######
+     ##        ##  ##    ##  ##       ##     ## ##     ##       ## ##
+     ##       #### ##     ## ######## ########  ##     ##  ######  ########
+
+You're about to initialize a Firebase project in this directory:
+
+  D:\Works\Important Works\Projects\lavish-clusters
+
+[info] 
+=== Project Setup
+[info] 
+[info] First, let's associate this project directory with a Firebase project.
+[info] You can create multiple project aliases by running firebase use --add, 
+[info] but for now we'll just set up a default project.
+[info] 
+[debug] [2024-11-12T17:38:18.322Z] Checked if tokens are valid: true, expires at: 1731436528193
+[debug] [2024-11-12T17:38:18.322Z] Checked if tokens are valid: true, expires at: 1731436528193
+[debug] [2024-11-12T17:38:18.325Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects pageSize=100
+[debug] [2024-11-12T17:38:19.129Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects 200
+[debug] [2024-11-12T17:38:19.130Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects [omitted]
+[debug] [2024-11-12T17:39:18.764Z] ----------------------------------------------------------------------
+[debug] [2024-11-12T17:39:18.768Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\la\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js init
+[debug] [2024-11-12T17:39:18.769Z] CLI Version:   13.24.2
+[debug] [2024-11-12T17:39:18.769Z] Platform:      win32
+[debug] [2024-11-12T17:39:18.769Z] Node Version:  v20.18.0
+[debug] [2024-11-12T17:39:18.769Z] Time:          Tue Nov 12 2024 22:39:18 GMT+0500 (Pakistan Standard Time)
+[debug] [2024-11-12T17:39:18.769Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2024-11-12T17:39:18.779Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2024-11-12T17:39:18.779Z] > authorizing via signed-in user (astrocallblog@gmail.com)
+[info] 
+     ######## #### ########  ######## ########     ###     ######  ########
+     ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##
+     ######    ##  ########  ######   ########  #########  ######  ######
+     ##        ##  ##    ##  ##       ##     ## ##     ##       ## ##
+     ##       #### ##     ## ######## ########  ##     ##  ######  ########
+
+You're about to initialize a Firebase project in this directory:
+
+  D:\Works\Important Works\Projects\lavish-clusters
+
+[info] 
+=== Project Setup
+[info] 
+[info] First, let's associate this project directory with a Firebase project.
+[info] You can create multiple project aliases by running firebase use --add, 
+[info] but for now we'll just set up a default project.
+[info] 
+[info] i  If you want to create a project in a Google Cloud organization or folder, please use "firebase projects:create" instead, and return to this command when you've created the project. 

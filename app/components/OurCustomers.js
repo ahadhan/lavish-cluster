@@ -73,7 +73,7 @@ const HowItWorks = () => {
                 <ul className="space-y-4">
                   {aboutContent.videos && aboutContent.videos.map((video) => (
                     <motion.li
-                      key={video.id}
+                      key={video.id} 
                       className={`cursor-pointer p-3 rounded-lg transition-all duration-300 ${
                         activeVideo && activeVideo.id === video.id
                           ? 'bg-gray-700 text-white shadow-lg'

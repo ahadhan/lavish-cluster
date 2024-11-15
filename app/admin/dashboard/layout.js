@@ -9,6 +9,13 @@ import Sidebar from "../dashboard/component/Sidebar";
 import Header from "../dashboard/component/Header";
 import AboutSection from "../dashboard/component/AboutContent";
 import HeroData from "./component/HeroData";
+import BundleOptions from "@/app/components/BundleOptions";
+import AdminBundleOptions from "./component/AdminBundleOption";
+import TestimonialsSection from "@/app/components/TestimonialsSection";
+import AdminHowItWorksSection from "./component/AdminHowItWorks";
+import AdminTestimonialSection from "./component/AdminTestimonialSection";
+import AdminFAQSection from "./component/AdminFAQ's";
+import HowItWorks from "@/app/components/OurCustomers";
 
 export default function DashboardLayout({ children }) {
   const [currentSection, setCurrentSection] = useState("Dashboard");
@@ -71,7 +78,17 @@ export default function DashboardLayout({ children }) {
       case "About Section":
         return <AboutSection />;
       case "Hero Section":
-        return <HeroData />
+        return <HeroData />;
+      case "Bundle Options":
+        return <AdminBundleOptions />;
+      case "Client Testimonials":
+        return <AdminTestimonialSection/>;
+      case "FAQ's":
+        return <AdminFAQSection/>;
+      case "Contact Section":
+        return <Admin/>;
+      case "How It Works":
+        return <AdminHowItWorksSection/>
       default:
         return <MainContent />;
     }

@@ -100,33 +100,34 @@ export default function Sidebar({ onSectionChange }) {
                 About
               </Link>
               <Link
-                href="/admin/dashboard/content/video-guidelines"
+                href="/admin/dashboard/"
                 className="block py-1 px-2 hover:bg-gray-700 rounded"
-                onClick={() => handleSectionChange("Video Guidelines")}
+                onClick={() => handleSectionChange("How It Works")}
               >
                 Video Guidelines
               </Link>
               <Link
-                href="/admin/dashboard/content/testimonials"
+                href="/admin/dashboard/"
+                className="block py-1 px-2 hover:bg-gray-700 rounded"
+                onClick={() => handleSectionChange("Bundle Options")}
+              >
+                Bundle Options
+              </Link>
+              <Link
+                href="/admin/dashboard/"
                 className="block py-1 px-2 hover:bg-gray-700 rounded"
                 onClick={() => handleSectionChange("Client Testimonials")}
               >
                 Client Testimonials
               </Link>
               <Link
-                href="/admin/dashboard/content/faq"
+                href="/admin/dashboard/"
                 className="block py-1 px-2 hover:bg-gray-700 rounded"
                 onClick={() => handleSectionChange("FAQ's")}
               >
                 FAQ's
               </Link>
-              <Link
-                href="/admin/dashboard/content/contact"
-                className="block py-1 px-2 hover:bg-gray-700 rounded"
-                onClick={() => handleSectionChange("Contact Section")}
-              >
-                Contact Section
-              </Link>
+            
             </div>
           )}
         </div>

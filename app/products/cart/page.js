@@ -6,6 +6,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { loadStripe } from "@stripe/stripe-js";
+// import Aj from '../../assets/p1.we'
 
 // Initialize Stripe outside the component to prevent re-initialization
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
@@ -126,6 +127,22 @@ const CartPage = () => {
       </div>
     );
   }
+
+  const handleAddToCart = (product) => {
+  const { title, price, images, id } = product; // Extract product details
+
+  // Build the URL query string with product details
+  const queryParams = new URLSearchParams({
+    name: title,
+    price: `£${price}`, // Include the currency symbol
+    image: images[0], // Use the first image URL
+    id: id,
+  }).toString();
+
+  // Redirect to the cart page with query parameters
+  router.push(`/products/cart?${queryParams}`);
+};
+
 
   return (
     <div className="flex flex-col min-h-screen justify-between bg-gradient-bottom-to-top">

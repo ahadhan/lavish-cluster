@@ -1,109 +1,115 @@
-
 'use client';
 
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import React, { useEffect, useState } from 'react';
+import { collection, getDocs } from 'firebase/firestore';
 import Image from 'next/image';
+import { motion } from 'framer-motion';
 import { FaArrowRightLong } from "react-icons/fa6";
 import { GrNext, GrPrevious } from 'react-icons/gr';
-import productImage1 from '../assets/1.webp';
-import productImage2 from '../assets/2.webp';
-import productImage3 from '../assets/3.webp';
-import productImage4 from '../assets/4.webp';
-
 import { useRouter } from 'next/navigation';
-
-// Configuration Object for Headings and Product Data
-const productContent = {
-  heading: "Our Recent Arrivals!",
-  products: [
-    {
-      id: 1,
-      name: 'Classic Elegance Lash Kit',
-      description: [
-        'Waterproof and long-lasting bond',
-        'Soft and comfortable to wear',
-        'Easy application with tweezers',
-        'Reusable up to 10 times',
-      ],
-      price: '£ 29.99',
-      image: productImage1,
-    },
-    {
-      id: 2,
-      name: 'Voluminous Glam Lash Kit',
-      description: [
-        'Adds volume to your lashes',
-        'Comfortable for daily use',
-        'Reusable for multiple applications',
-        'Lightweight and durable',
-      ],
-      price: '£ 34.99',
-      image: productImage2,
-    },
-    {
-      id: 3,
-      name: 'Natural Beauty Lash Kit',
-      description: [
-        'Enhances your natural lashes',
-        'Perfect for everyday wear',
-        'Lightweight and easy to apply',
-        'Long-lasting hold with soft texture',
-      ],
-      price: '£ 24.99',
-      image: productImage3,
-    },
-    {
-      id: 4,
-      name: 'Long Lasting Eye Lash Pack',
-      description: [
-        'Enhances your natural lashes',
-        'Perfect for everyday wear',
-        'Lightweight and easy to apply',
-        'Long-lasting hold with soft texture',
-      ],
-      price: '£ 18.32',
-      image: productImage4,
-    },
-  ],
-  shopNowText: "Shop Now",
-};
+import { db } from '../lib/firebase';
 
 const ProductSection = () => {
-  const router = useRouter()
-
-  const handleShopNow = () => {
-    router.push(`/products/${productContent.products[currentProduct].id}`);
-  };
-
+  const router = useRouter();
+  const [products, setProducts] = useState([]);
   const [currentProduct, setCurrentProduct] = useState(0);
 
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, 'products'));
+        const productData = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+        setProducts(productData);
+      } catch (error) {
+        console.error('Error fetching products:', error);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
+  const handleShopNow = () => {
+    const product = products[currentProduct];
+    if (product) {
+      router.push(
+        `/products/${product.id}?title=${encodeURIComponent(product.title)}&price=${encodeURIComponent(product.price)}&description=${encodeURIComponent(JSON.stringify(product.description))}&imageUrl=${encodeURIComponent(product.imageUrl)}`
+      );
+    }
+  };
+
+
+  // useEffect(() => {
+  //   const fetchProduct = async () => {
+  //     try {
+  //       const docRef = doc(db, 'products', productId);
+  //       const docSnap = await getDoc(docRef);
+
+  //       if (docSnap.exists()) {
+  //         setProduct(docSnap.data());
+  //       } else {
+  //         console.error('No such product!');
+  //       }
+  //     } catch (error) {
+  //       console.error('Error fetching product:', error);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+
+  //   fetchProduct();
+  // }, [productId]);
+
+
+  
+
+
+
   const handleNext = () => {
-    setCurrentProduct((prevProduct) =>
-      prevProduct === productContent.products.length - 1 ? 0 : prevProduct + 1
-    );
+    setCurrentProduct((prevProduct) => (prevProduct + 1) % products.length);
   };
 
   const handlePrevious = () => {
-    setCurrentProduct((prevProduct) =>
-      prevProduct === 0 ? productContent.products.length - 1 : prevProduct - 1
-    );
+    setCurrentProduct((prevProduct) => (prevProduct === 0 ? products.length - 1 : prevProduct - 1));
   };
+
+  if (products.length === 0) {
+    return <p>Loading...</p>;
+  }
+
+  const current = products[currentProduct];
+
+  if (products.length === 0) {
+    return (
+      <section id='products' className="py-20 bg-gradient-top-to-bottom text-primaryColor">
+        <div className="container mx-auto px-6">
+          <motion.h2
+            className="text-4xl font-extrabold mb-12 text-center text-gray-300 font-libre italic"
+            initial={{ opacity: 0, y: -30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1 }}
+          >
+            Our Recent Arrivals!
+          </motion.h2>
+          <p className="text-center text-gray-400 text-xl font-semibold">
+            No products to show!
+          </p>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section id='products' className="py-20 bg-gradient-top-to-bottom text-primaryColor">
       <div className="container mx-auto px-6">
-        {/* Dynamic Heading */}
         <motion.h2
           className="text-4xl font-extrabold mb-12 text-center text-gray-300 font-libre italic"
           initial={{ opacity: 0, y: -30 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 1 }}
         >
-          {productContent.heading}
+          Our Recent Arrivals!
         </motion.h2>
 
-        {/* Product Row */}
         <div className="flex flex-col md:flex-row items-center gap-10">
           {/* Left Side: Product Image */}
           <motion.div
@@ -114,10 +120,10 @@ const ProductSection = () => {
           >
             <div className="relative w-full h-64 md:h-80 bg-gray-200 rounded-lg overflow-hidden shadow-lg">
               <Image
-                src={productContent.products[currentProduct].image}
-                alt={productContent.products[currentProduct].name}
-                fill
-                style={{ objectFit: 'cover' }}
+                src={current.imageUrl}
+                alt={current.title}
+                layout="fill"
+                objectFit="cover"
                 className="rounded-lg"
               />
             </div>
@@ -130,46 +136,48 @@ const ProductSection = () => {
             transition={{ duration: 1 }}
             className="w-full md:w-1/2 space-y-6"
           >
-            <h2 className="text-3xl text-gray-300 font-bold">
-              {productContent.products[currentProduct].name}
-            </h2>
-            <p className="text-xl text-gray-300 font-semibold font-libre">
-              {productContent.products[currentProduct].price}
-            </p>
+            <h2 className="text-3xl text-gray-300 font-bold">{current.title}</h2>
+            <p className="text-xl text-gray-300 font-semibold font-libre">£ {current.price}</p>
             <ul className="space-y-2">
-              {productContent.products[currentProduct].description.map((point, index) => (
-                <li key={index} className="text-gray-300 flex items-center">
-                  <span className="mr-2 text-skin">•</span> {point}
-                </li>
-              ))}
+              {typeof current.description === 'string'
+                ? current.description.split('\n').map((point, index) => (
+                  <li key={index} className="text-gray-300 flex items-center">
+                    <span className="mr-2 text-skin">•</span> {point}
+                  </li>
+                ))
+                : current.description?.map((point, index) => ( // Handle array case
+                  <li key={index} className="text-gray-300 flex items-center">
+                    <span className="mr-2 text-skin">•</span> {point}
+                  </li>
+                ))}
             </ul>
+
             <motion.div
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               className="flex items-center gap-3 underline hover:text-gray-400 cursor-pointer text-skinColor duration-300"
               onClick={handleShopNow}
             >
-              <p className="font-libre italic">{productContent.shopNowText}</p>
+              <p className="font-libre ">Shop Now</p>
               <FaArrowRightLong className="font-[300] mr-2" />
             </motion.div>
           </motion.div>
         </div>
 
-        {/* Pagination Controls */}
         <div className="flex justify-center mt-10 space-x-4">
           <motion.button
             whileHover={{ scale: 1.1 }}
             onClick={handlePrevious}
-            className={`px-3 py-2 bg-gray-600 rounded-full ${currentProduct === 0 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-500'} transition duration-300`}
-            disabled={currentProduct === 0}
+            className={`px-3 py-2 bg-gray-600 rounded-full ${products.length > 1 ? 'hover:bg-gray-500' : 'opacity-50 cursor-not-allowed'
+              } transition duration-300`}
           >
             <GrPrevious className="text-2xl text-gray-100" />
           </motion.button>
           <motion.button
             whileHover={{ scale: 1.1 }}
             onClick={handleNext}
-            className={`px-3 py-2 bg-gray-600 rounded-full ${currentProduct === productContent.products.length - 1 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-500'} transition duration-300`}
-            disabled={currentProduct === productContent.products.length - 1}
+            className={`px-3 py-2 bg-gray-600 rounded-full ${products.length > 1 ? 'hover:bg-gray-500' : 'opacity-50 cursor-not-allowed'
+              } transition duration-300`}
           >
             <GrNext className="text-2xl text-gray-100" />
           </motion.button>
