@@ -75,8 +75,8 @@ const AdminFAQSection = () => {
   };
 
   return (
-    <div className="p-6 bg-gray-900 min-h-screen flex flex-col gap-8">
-      <div className="bg-gray-800 border border-gray-600 p-6 rounded-md shadow-md w-[80%] mx-auto space-y-6">
+    <div className="p-6 bg-black min-h-screen flex flex-col gap-8">
+      <div className="bpogwith border-2 border-gray-600 p-6 rounded-md shadow-md w-[80%] mx-auto space-y-6">
         <h2 className="text-3xl font-semibold text-white">Manage FAQs</h2>
 
         {/* FAQ List */}

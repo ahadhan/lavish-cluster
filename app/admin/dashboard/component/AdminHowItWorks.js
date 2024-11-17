@@ -90,8 +90,8 @@ const AdminHowItWorks = () => {
   if (loading) return <p>Loading admin panel...</p>;
 
   return (
-    <div className="p-6 bg-gray-900 min-h-screen flex flex-col gap-8">
-      <div className="bg-gray-800 border border-gray-600 p-6 rounded-md shadow-md w-[80%] mx-auto space-y-6">
+    <div className="p-6 bg-black min-h-screen flex flex-col gap-8">
+      <div className="bg-black border-2 border-white p-6 rounded-md shadow-md w-[80%] mx-auto space-y-6">
         <h2 className="text-3xl font-semibold text-white">Manage How It Works Section</h2>
 
         {/* Heading */}
@@ -178,7 +178,7 @@ const AdminHowItWorks = () => {
           />
           <button
             onClick={editingIndex === null ? addVideo : saveEditedVideo}
-            className="w-full bg-blue-500 text-white py-2 rounded-md mt-4 hover:bg-blue-600 transition"
+            className="w-full bg-gray-700 text-white py-2 rounded-md mt-4 hover:bg-blue-600 transition"
           >
             {editingIndex === null ? 'Add Video' : 'Save Changes'}
           </button>

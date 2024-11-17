@@ -1,4 +1,7 @@
-// context/ProductContext.js
+
+"use client"; // Add this line to ensure it is treated as a Client Component
+
+ // context/ProductContext.js
 import { createContext, useContext, useState } from 'react';
 
 const ProductContext = createContext();

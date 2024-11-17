@@ -1,7 +1,7 @@
-
 "use client";
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation'; // Import useRouter
 import Image from 'next/image';
 import Link from 'next/link';
 import {
@@ -10,8 +10,9 @@ import {
   FaYoutube,
   FaTiktok,
   FaBars,
-  FaTimes,
+  FaTimes,create
 } from 'react-icons/fa';
+import { MdAccountBox } from "react-icons/md";
 import { motion } from 'framer-motion';
 import logoImg from '../assets/logo.png';
 import '../globals.css';
@@ -19,6 +20,7 @@ import '../globals.css';
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const router = useRouter(); // Initialize router
 
   // Handle scroll to change navbar background
   useEffect(() => {
@@ -29,6 +31,10 @@ const Header = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  const handleProfileClick = () => {
+    router.push('/login'); // Redirect to login
+  };
 
   return (
     <header
@@ -64,6 +70,13 @@ const Header = () => {
 
         {/* Desktop Social Icons */}
         <div className="hidden md:flex space-x-4">
+          <button
+            onClick={handleProfileClick} // Attach click handler
+            className="text-white text-xl w-[30px]"
+          >
+            <MdAccountBox />
+          </button>
+
           <a
             href="https://instagram.com/lavishclusters"
             target="_blank"
@@ -124,6 +137,9 @@ const Header = () => {
 
             {/* Mobile Social Icons */}
             <div className="flex space-x-4 mt-4 justify-center">
+              <button onClick={handleProfileClick} className="text-white">
+                <MdAccountBox />
+              </button>
               <a
                 href="https://instagram.com/lavishclusters"
                 target="_blank"
