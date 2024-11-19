@@ -119,7 +119,7 @@ const Header = () => {
           initial={{ height: 0 }}
           animate={{ height: 'auto' }}
           transition={{ duration: 0.3 }}
-          className="md:hidden bg-gray-800 text-white shadow-md"
+          className="md:hidden bg-black text-white shadow-md"
         >
           <div className="px-6 py-4 space-y-4">
             {['about', 'products', 'how-it-works', 'testimonials', 'contact'].map(

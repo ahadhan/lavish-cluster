@@ -2,10 +2,12 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import image from "../../app/assets/eyelash-2.webp";
+import image from "../../app/assets/Aj.webp";
 import Image from 'next/image';
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../lib/firebase"; // Adjust the path to your Firebase configuration file
+import { IoMdArrowRoundBack } from "react-icons/io";
+
 
 export default function LoginPage() {
     const [email, setEmail] = useState("");
@@ -25,17 +27,26 @@ export default function LoginPage() {
         }
     };
 
+    const handleGoBack = async (e) => {
+        router.push("/");
+
+    }
+
     return (
         <div className="flex items-center justify-center min-h-screen bg-black text-white ">
             {/* Left Column - Login Form */}
             <div className="w-[80%] h-auto flex basis-2/3 items-center justify-center p-8 rounded-lg border border-gray-500">
-                <div className="w-full max-w-md h-[500px] p-10 flex flex-col basis-1/2 bg-black">
+                <div className="w-full max-w-md h-[500px] p-10 flex flex-col basis-1/2 bg-black ">
+                <span className="back-btn text-2xl " onClick={handleGoBack}>
+                <IoMdArrowRoundBack />
+                </span>
+
                     <h2 className="text-3xl font-poppins font-bold mb-6 text-center">
                         ADMIN LOGIN
                     </h2>
                     <form onSubmit={handleLogin} className="space-y-12">
                         <div>
-                            <label htmlFor="email" className="block text-sm font-medium">
+                            <label htmlFor="email" className="block text-sm font-medium mb-10">
                                 Email
                             </label>
                             <input

@@ -90,7 +90,7 @@ const AdminFAQSection = () => {
           </thead>
           <tbody>
             {faqs.map((faq, index) => (
-              <tr key={faq.id} className="hover:bg-gray-700">
+              <tr key={faq.id} className="hover:bg-sc ">
                 <td className="p-2 border border-gray-600">{faq.question}</td>
                 <td className="p-2 border border-gray-600">{faq.answer}</td>
                 <td className="p-2 border border-gray-600 flex gap-2">

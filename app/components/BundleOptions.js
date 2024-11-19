@@ -172,7 +172,7 @@ const BundleOptions = () => {
               </div>
               <a
                 href={bundleData.button.href}
-                className="inline-block mt-6 py-2 px-6 bg-yellow-500 text-black rounded-lg hover:bg-yellow-400"
+                className="box-content inline-block mt-6 py-2 px-6 bg-gray-200 text-black rounded-lg hover:bg-gray-800 hover:text-white hover:border-2 duration-300"
               >
                 {bundleData.button.text}
               </a>

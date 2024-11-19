@@ -5,10 +5,14 @@ import { IoIosArrowDown, IoIosArrowUp, IoMdArrowBack } from "react-icons/io";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../../../lib/firebase";
 import { signOut } from "firebase/auth";
+import { useRouter } from "next/navigation";
+
 
 
 export default function Sidebar({ onSectionChange }) {
   const [openDropdown, setOpenDropdown] = useState(null);
+  const router = useRouter();
+
 
   // Toggle dropdown visibility
   const toggleDropdown = (index) => {
@@ -39,7 +43,6 @@ export default function Sidebar({ onSectionChange }) {
     try {
       await signOut(auth);
       console.log("User logged out successfully");
-      // Redirect or perform other actions after logout
       router.push("/login"); // Redirect to the login page
     } catch (error) {
       console.error("Error logging out:", error);
