@@ -6,9 +6,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { loadStripe } from "@stripe/stripe-js";
-// import Aj from '../../assets/p1.we'
 
-// Initialize Stripe outside the component to prevent re-initialization
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
 
 const CartPage = () => {

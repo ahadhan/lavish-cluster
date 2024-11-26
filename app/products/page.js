@@ -2,7 +2,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useProduct } from "../../context/ProductContext";
+import { useProduct } from "../../context/ProductContext.js";
 
 const ProductsPage = () => {
   const router = useRouter();
@@ -10,7 +10,7 @@ const ProductsPage = () => {
 
   const handleViewDetails = (product) => {
     setSelectedProduct(product);
-    router.push("/product-details");
+    router.push("/product-details"); 
   };
 
   return (

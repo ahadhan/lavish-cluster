@@ -32,7 +32,7 @@ const ProductSection = () => {
     const product = products[currentProduct];
     if (product) {
       router.push(
-        `/products/${product.id}?title=${encodeURIComponent(product.title)}&price=${encodeURIComponent(product.price)}&description=${encodeURIComponent(JSON.stringify(product.description))}&imageUrl=${encodeURIComponent(product.imageUrl)}`
+        `/products/cart/${product.id}?title=${encodeURIComponent(product.title)}&price=${encodeURIComponent(product.price)}&description=${encodeURIComponent(JSON.stringify(product.description))}&imageUrl=${encodeURIComponent(product.imageUrl)}`
       );
     }
   };
