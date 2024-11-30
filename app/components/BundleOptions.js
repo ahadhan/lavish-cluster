@@ -118,23 +118,49 @@
 import React, { useEffect, useState } from 'react';
 import { getFirestore, collection, getDocs } from 'firebase/firestore';
 import Image from 'next/image';
-import bundleImage1 from '../assets/1.webp'; // Fallback image
+import bundleImage1 from '../assets/bgImage.jpg'; // Fallback image
 import { Parallax } from 'react-parallax';
 import { db } from "../lib/firebase"; // Import the Firebase setup
+import { doc, getDoc } from 'firebase/firestore';
+import { FaLocationArrow } from "react-icons/fa";
+import { IoIosArrowForward, IoIosArrowBack } from "react-icons/io";
+// import { MdArrowForward } from 'react-icons/md';
 
 
-const BundleOptions = () => { 
-  const [bundleData, setBundleData] = useState(null);
+
+const BundleOptions = () => {
+  const [bundleData, setBundleData] = useState({
+    heading: "",
+    subheading: "",
+    images: {
+      largeImage: "",        // Empty string for large image URL
+      smallImages: [],       // Empty array for small images
+      parallaxImages: "",    // Empty string for parallax image URL
+    },
+    points: [],
+  });
 
   useEffect(() => {
     const fetchBundleData = async () => {
-      const querySnapshot = await getDocs(collection(db, 'bundles'));
-      const data = querySnapshot.docs.map((doc) => doc.data())[0]; // Get the first bundle for now
-      setBundleData(data);
+      try {
+        const docRef = doc(db, 'content', 'bundleOptions');  // Reference to the specific document
+        const docSnapshot = await getDoc(docRef);  // Fetch the document snapshot
+
+        if (docSnapshot.exists()) {
+          const data = docSnapshot.data(); // Get the document data
+          console.log(data);  // Or set it to your state
+          setBundleData(data)
+        } else {
+          console.log("No such document!");
+        }
+      } catch (error) {
+        console.error("Error fetching data: ", error);
+      }
     };
 
     fetchBundleData();
-  }, []);
+  }, []); // Empty dependency array means this runs once when the component mounts
+
 
   if (!bundleData) {
     return <p>Loading...</p>;
@@ -142,7 +168,7 @@ const BundleOptions = () => {
 
   return (
     <section className="text-white relative">
-      <Parallax bgImage={bundleData.images.parallaxImages || bundleImage1.src} bgImageAlt="Bundles Background" strength={300}>
+      <Parallax bgImage={bundleData.images.parallaxImage || bundleImage1.src} bgImageAlt="Bundles Background" strength={300}>
         <div className="mx-auto px-6 py-10 z-10" style={{ minHeight: '600px' }}>
           <div className="container mx-auto flex flex-col md:flex-row gap-10 items-center">
             {/* Left Side: Bundle Image Gallery */}
@@ -153,28 +179,29 @@ const BundleOptions = () => {
                   <Image src={bundleData.images.largeImage || bundleImage1.src} alt="Bundle Image" layout="fill" objectFit="cover" />
                 </div>
               </div>
-              {/* Small Images */}
-              {bundleData.images.smallImages.map((image, index) => (
-                <div key={index} className="overflow-hidden relative w-full h-32">
-                  <Image src={image} alt={`Small Bundle ${index + 1}`} layout="fill" objectFit="cover" />
-                </div>
-              ))}
+              {Array.isArray(bundleData.images.smallImages) && bundleData.images.smallImages.length > 0 ? (
+                bundleData.images.smallImages.map((image, index) => (
+                  <div key={index} className="overflow-hidden relative w-full h-44">
+                    <Image src={image} alt={`Small Image ${index}`} layout="fill" objectFit="cover" />
+                  </div>
+                ))
+              ) : ""}
             </div>
 
             {/* Right Side: Bundle Text and Button */}
             <div className="w-full md:w-1/2 text-center md:text-left">
-              <h2 className="text-4xl font-semibold">{bundleData.heading}</h2>
+              <h2 className="text-4xl font-semibold my-3">{bundleData.heading}</h2>
               <p className="text-xl text-gray-400">{bundleData.subheading}</p>
               <div className="mt-6">
-                {bundleData.listItems.map((item, index) => (
-                  <p key={index} className="text-xl text-gray-200">{item.boldText}: {item.description}</p>
+                {bundleData.points.map((item, index) => (
+                  <p key={index} className="text-lg my-2 flex gap-2 items-center  text-gray-200"><IoIosArrowForward /> {item}</p>
                 ))}
               </div>
               <a
-                href={bundleData.button.href}
-                className="box-content inline-block mt-6 py-2 px-6 bg-gray-200 text-black rounded-lg hover:bg-gray-800 hover:text-white hover:border-2 duration-300"
+                href={"/"}
+                className=" flex w-fit gap-2 items-center box-content  mt-6 py-2 px-3 font-semibold bg-gray-200 text-black rounded-lg hover:bg-gray-800 hover:text-white hover:border-2 duration-300"
               >
-                {bundleData.button.text}
+                Check Out <FaLocationArrow />
               </a>
             </div>
           </div>

@@ -14,7 +14,7 @@ const HeroSection = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const docRef = doc(db, 'heroSection', 'content');
+      const docRef = doc(db, 'content', 'heroSection');
       const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
         setContent(docSnap.data());
